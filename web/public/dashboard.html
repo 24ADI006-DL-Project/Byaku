@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4fafc">
+  <meta name="description" content="Explore the camera, detection, depth, spatial reasoning, and voice workflow behind BYAKU.">
+  <title>BYAKU | Project Workflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/camera.js" defer></script>
+  <script src="/js/websocket.js" defer></script>
+  <script src="/js/dashboard.js" defer></script>
+</head>
+<body class="dashboard-page byaku-dashboard">
+  <div class="page-wash" aria-hidden="true"></div>
+  <aside class="dashboard-sidebar">
+    <a class="brand dashboard-brand" href="/" aria-label="BYAKU home"><span class="brand-mark brand-eye" aria-hidden="true"><span></span><i></i></span><span class="brand-copy"><strong data-app-name>BYAKU</strong><small>Project workflow</small></span></a>
+    <button class="workflow-menu-toggle" id="workflow-menu-toggle" type="button" aria-expanded="false" aria-controls="workflow-navigation" aria-label="Open project navigation"><span></span><span></span></button>
+    <p class="nav-caption">WORKSPACE</p>
+    <nav class="dashboard-nav" id="workflow-navigation" aria-label="Dashboard sections">
+      <a class="nav-item is-current" href="#overview"><span class="nav-symbol">⌂</span>Overview</a>
+      <a class="nav-item" href="#live-view"><span class="nav-symbol">◎</span>Live View</a>
+      <a class="nav-item" href="#detection"><span class="nav-symbol">⌗</span>Detection</a>
+      <a class="nav-item" href="#tracking"><span class="nav-symbol">↗</span>Tracking</a>
+      <a class="nav-item" href="#depth"><span class="nav-symbol">◌</span>Depth</a>
+      <a class="nav-item" href="#spatial"><span class="nav-symbol">⊙</span>Spatial Analysis</a>
+      <a class="nav-item" href="#scene-graph"><span class="nav-symbol">⌘</span>Scene Graph</a>
+      <a class="nav-item" href="#query"><span class="nav-symbol">⌕</span>Query</a>
+      <a class="nav-item" href="#events"><span class="nav-symbol">◷</span>Events</a>
+      <a class="nav-item" href="#settings"><span class="nav-symbol">⚙</span>Settings</a>
+    </nav>
+    <div class="dashboard-sidebar-status"><span class="status-dot status-dot-muted" aria-hidden="true"></span><span><strong>Backend disconnected</strong><small>Preview mode</small></span></div>
+    <a class="dashboard-return" href="/">← Return to BYAKU</a>
+  </aside>
+
+  <main class="dashboard-main" id="overview">
+    <header class="dashboard-header">
+      <div><p class="eyebrow"><span class="eyebrow-line"></span> PROJECT WORKFLOW</p><h1>How BYAKU understands a scene</h1><p class="dashboard-intro">A technical walkthrough of the visual-awareness pipeline.</p></div>
+      <div class="dashboard-head-status"><span class="connection-pill"><span class="status-dot" aria-hidden="true"></span><span>Awaiting backend connection</span></span><a class="icon-link" href="/" aria-label="Return to assistant home" title="Assistant home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z"/></svg></a></div>
+    </header>
+
+    <section class="pipeline-panel glass-panel" aria-labelledby="pipeline-title">
+      <div class="panel-heading"><div><p class="section-kicker">END-TO-END FLOW</p><h2 id="pipeline-title">Processing pipeline</h2></div><span class="backend-state"><span class="status-dot status-dot-muted" aria-hidden="true"></span>No live module status</span></div>
+      <ol class="pipeline-track" aria-label="Camera, YOLO detection, ByteTrack, Depth Anything V2, spatial processing, scene graph, query reasoning, narration, and text-to-speech">
+        <li data-module="camera"><span class="pipeline-node"><i>01</i>Camera</span></li><li data-module="detection"><span class="pipeline-node"><i>02</i>YOLO Detection</span></li><li data-module="tracking"><span class="pipeline-node"><i>03</i>ByteTrack</span></li><li data-module="depth"><span class="pipeline-node"><i>04</i>Depth Anything V2</span></li><li data-module="spatial"><span class="pipeline-node"><i>05</i>Spatial Processing</span></li><li data-module="scene"><span class="pipeline-node"><i>06</i>Scene Graph</span></li><li data-module="reasoning"><span class="pipeline-node"><i>07</i>Query / Reasoning</span></li><li data-module="narration"><span class="pipeline-node"><i>08</i>Narration</span></li><li data-module="tts"><span class="pipeline-node"><i>09</i>TTS</span></li>
+      </ol>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dash-card live-card glass-panel" id="live-view">
+        <div class="panel-heading"><div><p class="section-kicker">CAMERA</p><h2>Live View</h2></div><span class="camera-status" id="dash-camera-status"><span class="status-dot status-dot-muted" aria-hidden="true"></span>Camera Ready</span></div>
+        <div class="dashboard-camera camera-view" id="dash-camera-view"><video id="dash-camera-video" autoplay muted playsinline aria-label="Dashboard live camera preview"></video><canvas class="camera-overlay" id="dash-camera-overlay" aria-hidden="true"></canvas><div class="camera-placeholder" id="dash-camera-placeholder"><span class="camera-placeholder-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 10h5l2-3h8l2 3h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2Z"/><circle cx="16" cy="17" r="5"/></svg></span><span>Camera not connected</span><small>Start a local preview to check the camera.</small></div><span class="camera-corner corner-tl" aria-hidden="true"></span><span class="camera-corner corner-tr" aria-hidden="true"></span><span class="camera-corner corner-bl" aria-hidden="true"></span><span class="camera-corner corner-br" aria-hidden="true"></span></div>
+        <div class="live-card-footer"><span id="dash-camera-detail">No frames received</span><button class="text-button" id="dash-camera-toggle" type="button">Enable preview</button></div>
+        <p class="subtle-note">Detection boxes and confidence appear when the AI backend is connected.</p>
+      </article>
+
+      <article class="dash-card system-card glass-panel" id="settings">
+        <div class="panel-heading"><div><p class="section-kicker">RUNTIME</p><h2>System status</h2></div><span class="state-chip state-chip-muted"><span class="state-dot" aria-hidden="true"></span>Offline</span></div>
+        <dl class="system-list"><div><dt>Camera</dt><dd id="system-camera">Not connected</dd></div><div><dt>Detection</dt><dd id="system-detection">Unavailable</dd></div><div><dt>Tracking</dt><dd id="system-tracking">Unavailable</dd></div><div><dt>Depth</dt><dd id="system-depth">Unavailable</dd></div><div><dt>Text to speech</dt><dd id="system-tts">Not connected</dd></div><div><dt>Processing FPS</dt><dd id="system-fps">—</dd></div><div><dt>Latency</dt><dd id="system-latency">—</dd></div></dl>
+      </article>
+
+      <article class="dash-card table-card glass-panel" id="detection"><div class="panel-heading"><div><p class="section-kicker">OBJECTS</p><h2>Detection & tracking</h2></div><span class="count-badge" id="detection-count">0 objects</span></div><div class="table-wrap"><table><thead><tr><th scope="col">Object</th><th scope="col">Track ID</th><th scope="col">Confidence</th><th scope="col">Bounding box</th></tr></thead><tbody id="detection-rows"><tr class="empty-row"><td colspan="4">No detections received</td></tr></tbody></table></div><div class="tracking-footnote" id="tracking">Tracking data is waiting for the backend.</div></article>
+
+      <article class="dash-card depth-card glass-panel" id="depth"><div class="panel-heading"><div><p class="section-kicker">RELATIVE DEPTH</p><h2>Depth map</h2></div><span class="data-tag" id="depth-status">No depth frame</span></div><div class="depth-empty"><div class="depth-surface" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><img class="depth-preview" id="depth-preview" alt="Latest relative depth map" hidden><p id="depth-message">Depth output will appear here</p><small>Relative depth only · no metric distance</small></div><div class="depth-scale"><span><i class="scale-near"></i>Very close</span><span><i class="scale-close"></i>Close</span><span><i class="scale-mid"></i>Moderate</span><span><i class="scale-far"></i>Far</span></div></article>
+
+      <article class="dash-card spatial-card glass-panel" id="spatial"><div class="panel-heading"><div><p class="section-kicker">POSITION & DISTANCE</p><h2>Spatial understanding</h2></div><span class="data-tag">No scene data</span></div><div class="table-wrap"><table><thead><tr><th scope="col">Object</th><th scope="col">Position</th><th scope="col">Distance</th></tr></thead><tbody id="spatial-rows"><tr class="empty-row"><td colspan="3">No spatial objects received</td></tr></tbody></table></div></article>
+
+      <article class="dash-card graph-card glass-panel" id="scene-graph"><div class="panel-heading"><div><p class="section-kicker">RELATIONSHIPS</p><h2>Scene graph</h2></div><span class="data-tag">Waiting for scene</span></div><div class="graph-empty"><span class="graph-orbit orbit-a"></span><span class="graph-orbit orbit-b"></span><div class="graph-node">Scene graph</div><p>Relationships appear when scene data is available.</p></div></article>
+
+      <article class="dash-card query-card glass-panel" id="query"><div class="panel-heading"><div><p class="section-kicker">VOICE ASSISTANCE</p><h2>Latest query</h2></div><span class="data-tag">No query received</span></div><div class="query-empty"><span class="query-mic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/></svg></span><div><strong>Waiting for a question</strong><p>Query, target position, distance, and spoken answer will appear here.</p></div></div><dl class="query-result-list"><div><dt>Target</dt><dd>—</dd></div><div><dt>Position</dt><dd>—</dd></div><div><dt>Distance</dt><dd>—</dd></div></dl></article>
+
+      <article class="dash-card events-card glass-panel" id="events"><div class="panel-heading"><div><p class="section-kicker">PRIORITY UPDATES</p><h2>Recent events</h2></div><span class="data-tag">No events</span></div><div class="events-empty"><span class="events-check" aria-hidden="true">✓</span><div><strong>Nothing to report</strong><p>Important scene events will be listed here.</p></div></div><ul class="event-list" id="event-list" aria-live="polite"></ul></article>
+    </section>
+    <footer class="dashboard-footer"><span>BYAKU · Technical view</span><a href="/">Open product home <span aria-hidden="true">↗</span></a></footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f3fc">
+  <meta name="description" content="BYAKU is your AI visual assistant. Speak naturally to understand your surroundings.">
+  <title>BYAKU | Your AI visual assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/camera.js" defer></script>
+  <script src="/js/websocket.js" defer></script>
+  <script src="/js/intro.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</head>
+<body class="home-page byaku-home user-interface">
+  <div class="page-wash" aria-hidden="true"></div>
+  <section class="intro-screen" id="intro-screen" aria-label="BYAKU introduction">
+    <div class="intro-fire-field" aria-hidden="true">
+      <span class="intro-fire-halo"></span>
+      <span class="intro-flame intro-flame-back"></span>
+      <span class="intro-flame intro-flame-mid"></span>
+      <span class="intro-flame intro-flame-core"></span>
+      <span class="intro-embers"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="intro-rings" aria-hidden="true"><span></span><span></span><span></span><span></span><i></i><i></i></div>
+    <div class="intro-center"><p class="intro-wordmark" data-app-name>BYAKU</p><p class="intro-tagline">SEE BEYOND.</p></div>
+    <button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
+  </section>
+
+  <header class="user-header">
+    <a class="user-brand" href="/" aria-label="BYAKU home"><img class="user-brand-logo" src="/assets/byakugan-logo.jpg" alt="" aria-hidden="true"><span data-app-name>BYAKU</span></a>
+    <a class="workflow-link" href="/dashboard.html">Project workflow <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="user-main">
+    <section class="user-stage" aria-labelledby="user-welcome">
+      <div class="user-aura" aria-hidden="true"></div>
+      <div class="assistant-panel user-assistant" id="assistant-panel" data-state="idle">
+        <span class="state-chip user-state-chip"><span class="state-dot" aria-hidden="true"></span><span id="state-label">Idle</span></span>
+        <div class="orb-stage user-orb-stage" id="orb-stage" aria-live="polite" aria-atomic="true">
+          <div class="orb-halo orb-halo-outer"></div><div class="orb-halo orb-halo-inner"></div><div class="orb-iris"><i></i><i></i><i></i><i></i></div>
+          <button class="orb-button user-orb-button" id="start-listening" type="button" aria-label="Talk to BYAKU. Start listening for a voice command."><svg class="microphone-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="12" y="4" width="8" height="16" rx="4"></rect><path d="M8 15.5a8 8 0 0 0 16 0M16 24v4M12.5 28h7"></path></svg></button>
+          <div class="orb-ripple ripple-one"></div><div class="orb-ripple ripple-two"></div>
+        </div>
+        <div class="waveform user-waveform" id="waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <p class="assistant-state-title user-greeting" id="user-welcome">Welcome to <span data-app-name>BYAKU</span></p>
+        <p class="assistant-state-detail user-tagline">Your AI visual assistant</p>
+        <p class="assistant-state-detail user-state-detail" id="assistant-detail">Say “START” to begin</p>
+        <span class="mic-hint"><span class="mic-hint-dot" aria-hidden="true"></span>Microphone ready</span>
+        <p class="transcript-line" id="transcript-line" aria-live="polite"></p>
+      </div>
+
+      <aside class="camera-panel user-camera" id="camera-panel" aria-labelledby="camera-title" hidden>
+        <div class="camera-card-head"><div><p class="section-kicker">LIVE CAMERA</p><h2 id="camera-title">Camera preview</h2></div><span class="camera-status" id="camera-status"><span class="status-dot status-dot-muted" aria-hidden="true"></span>Waiting</span></div>
+        <div class="camera-view" id="camera-view"><video id="camera-video" autoplay muted playsinline aria-label="Camera preview for helper visibility"></video><canvas class="camera-overlay" id="camera-overlay" aria-hidden="true"></canvas><div class="camera-placeholder" id="camera-placeholder"><span class="camera-placeholder-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 10h5l2-3h8l2 3h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2Z"/><circle cx="16" cy="17" r="5"/></svg></span><span>Waiting for camera</span><small>Camera is requested when you say START.</small></div><span class="camera-corner corner-tl" aria-hidden="true"></span><span class="camera-corner corner-tr" aria-hidden="true"></span><span class="camera-corner corner-bl" aria-hidden="true"></span><span class="camera-corner corner-br" aria-hidden="true"></span><div class="camera-scan" aria-hidden="true"></div></div>
+        <p class="camera-footnote" id="camera-footnote" aria-live="polite">Camera not active</p>
+      </aside>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

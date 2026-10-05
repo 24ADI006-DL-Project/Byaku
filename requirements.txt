@@ -1,0 +1,17 @@
+# Core computer vision and runtime packages
+opencv-python>=4.10.0
+numpy>=1.26.0
+
+# Recommended project stack for later stages
+torch>=2.2.0
+ultralytics>=8.2.0
+networkx>=3.2.0
+gradio>=4.0.0
+pyttsx3>=2.90
+SpeechRecognition>=3.10
+PyAudio>=0.2.14
+vosk>=0.3.45
+
+# Optional for later modules
+# depth-anything-v2
+# boxmot

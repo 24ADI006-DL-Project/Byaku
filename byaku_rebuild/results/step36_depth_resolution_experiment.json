@@ -1,0 +1,1683 @@
+﻿{
+  "conditions": {
+    "video_path": "C:\\Users\\piriyadharshini\\OneDrive\\Documents\\CV DL\\pinterest-video.mp4",
+    "video_fps": 30.0,
+    "video_frame_count": 141,
+    "video_width": 720,
+    "video_height": 1280,
+    "source_frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "warmup_frames": 2,
+    "measured_frames": 10,
+    "device": "cpu",
+    "policies": [
+      {
+        "name": "baseline_364",
+        "requested_size": 364
+      },
+      {
+        "name": "shorter_side_320",
+        "requested_size": 320
+      },
+      {
+        "name": "shorter_side_256",
+        "requested_size": 256
+      },
+      {
+        "name": "shorter_side_224",
+        "requested_size": 224
+      }
+    ],
+    "same_video_frames_for_all_policies": true,
+    "depth_model_loaded_once_and_reused": true,
+    "model_adapters_created_before_frame_processing": true,
+    "model_adapters_unchanged_during_measured_frames": true,
+    "first_call_predictor_warmup_excluded": true,
+    "detection_tracker_independent_per_policy": true,
+    "detection_same_frame_sequence_per_policy": true,
+    "detection_adapter_initialization_ms": {
+      "baseline_364": 430.8991000007154,
+      "shorter_side_320": 87.79850000064471,
+      "shorter_side_256": 89.50030000050901,
+      "shorter_side_224": 240.14960000022256
+    },
+    "processor_size_was_temporary_runtime_override_only": true,
+    "baseline_configuration_unchanged": true
+  },
+  "policies": [
+    {
+      "name": "baseline_364",
+      "requested_size": 364,
+      "actual_tensor_shape": [
+        1,
+        3,
+        644,
+        364
+      ],
+      "processor_source_image_shape": [
+        1280,
+        720,
+        3
+      ],
+      "processor_size_argument": {
+        "height": 364,
+        "width": 364
+      },
+      "processor_keep_aspect_ratio": true,
+      "processor_ensure_multiple_of": 14,
+      "processor_class": "DPTImageProcessor",
+      "processor_do_resize": true,
+      "processor_do_pad": false,
+      "processor_crop_size": null,
+      "model_output_tensor_shape": [
+        1,
+        644,
+        364
+      ],
+      "depth_ms": {
+        "count": 10,
+        "mean_ms": 901.45861,
+        "median_ms": 896.6173,
+        "min_ms": 870.3165,
+        "max_ms": 973.1492
+      },
+      "depth_preprocessing_ms": {
+        "count": 10,
+        "mean_ms": 21.15282,
+        "median_ms": 21.1423,
+        "min_ms": 20.0793,
+        "max_ms": 22.0097
+      },
+      "depth_model_inference_ms": {
+        "count": 10,
+        "mean_ms": 866.7438099999999,
+        "median_ms": 861.64805,
+        "min_ms": 838.6855,
+        "max_ms": 940.4183
+      },
+      "depth_postprocessing_ms": {
+        "count": 10,
+        "mean_ms": 12.20892,
+        "median_ms": 12.06155,
+        "min_ms": 10.9148,
+        "max_ms": 13.7374
+      },
+      "yolo_bytetrack_ms": {
+        "count": 10,
+        "mean_ms": 86.2431,
+        "median_ms": 85.98915,
+        "min_ms": 79.5879,
+        "max_ms": 92.5383
+      },
+      "spatial_relationships_ms": {
+        "count": 10,
+        "mean_ms": 1.60643,
+        "median_ms": 1.51215,
+        "min_ms": 1.3678,
+        "max_ms": 2.1642
+      },
+      "scene_memory_ms": {
+        "count": 10,
+        "mean_ms": 0.81922,
+        "median_ms": 0.8431,
+        "min_ms": 0.4918,
+        "max_ms": 1.1191
+      },
+      "scene_graph_ms": {
+        "count": 10,
+        "mean_ms": 0.59596,
+        "median_ms": 0.6060000000000001,
+        "min_ms": 0.5033,
+        "max_ms": 0.7246
+      },
+      "scene_description_ms": {
+        "count": 10,
+        "mean_ms": 1.32169,
+        "median_ms": 1.27895,
+        "min_ms": 1.0712,
+        "max_ms": 1.6474
+      },
+      "scene_narration_ms": {
+        "count": 10,
+        "mean_ms": 0.17046,
+        "median_ms": 0.1612,
+        "min_ms": 0.1261,
+        "max_ms": 0.2709
+      },
+      "pipeline_orchestration_ms": {
+        "count": 10,
+        "mean_ms": 5.360569999993459,
+        "median_ms": 5.326049999894167,
+        "min_ms": 5.054500000369444,
+        "max_ms": 5.815999999867927
+      },
+      "response_preparation_ms": {
+        "count": 10,
+        "mean_ms": 3.3573,
+        "median_ms": 3.38715,
+        "min_ms": 3.0524,
+        "max_ms": 3.7894
+      },
+      "backend_processing_ms": {
+        "count": 10,
+        "mean_ms": 1010.111759999927,
+        "median_ms": 1002.2100999995018,
+        "min_ms": 980.2488000004814,
+        "max_ms": 1087.718699999641
+      },
+      "http_round_trip_ms": {
+        "count": 10,
+        "mean_ms": 1017.9017600001316,
+        "median_ms": 1009.9063500001648,
+        "min_ms": 987.5577000002522,
+        "max_ms": 1095.510799999829
+      },
+      "other_ms": 22.410049999926997,
+      "fps": 0.9899894641361984,
+      "depth_valid_on_all_frames": true,
+      "depth_valid_frame_count": 10,
+      "depth_preview": {
+        "all_measured_frames_valid": true,
+        "representative_frame": {
+          "valid": true,
+          "shape": [
+            640,
+            360
+          ],
+          "reason": null
+        }
+      },
+      "detection_summary": {
+        "detections_per_frame": [
+          6,
+          5,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_detections": 46,
+        "class_counts": {
+          "car": 11,
+          "person": 35
+        },
+        "track_ids_and_boxes_compared": true
+      },
+      "representative_frame_depths": [
+        {
+          "object_id": "track:1",
+          "track_id": 1,
+          "class_name": "person",
+          "bounding_box": [
+            248.79904174804688,
+            693.6827392578125,
+            296.8648986816406,
+            834.9425659179688
+          ],
+          "relative_depth_value": 0.19015753269195557
+        },
+        {
+          "object_id": "track:2",
+          "track_id": 2,
+          "class_name": "person",
+          "bounding_box": [
+            562.5112915039062,
+            706.4326171875,
+            619.061767578125,
+            846.8006591796875
+          ],
+          "relative_depth_value": 0.2203136533498764
+        },
+        {
+          "object_id": "track:3",
+          "track_id": 3,
+          "class_name": "person",
+          "bounding_box": [
+            76.35140228271484,
+            704.81201171875,
+            117.80239868164062,
+            837.4262084960938
+          ],
+          "relative_depth_value": 0.23315562307834625
+        },
+        {
+          "object_id": "track:4",
+          "track_id": 4,
+          "class_name": "person",
+          "bounding_box": [
+            520.3324584960938,
+            707.0903930664062,
+            565.9962158203125,
+            834.6578979492188
+          ],
+          "relative_depth_value": 0.13433223962783813
+        },
+        {
+          "object_id": "track:5",
+          "track_id": 5,
+          "class_name": "car",
+          "bounding_box": [
+            609.4452514648438,
+            720.9341430664062,
+            719.1304321289062,
+            821.1294555664062
+          ],
+          "relative_depth_value": 0.18986906111240387
+        },
+        {
+          "object_id": "track:6",
+          "track_id": 6,
+          "class_name": "car",
+          "bounding_box": [
+            620.9132690429688,
+            721.7113647460938,
+            696.7310791015625,
+            749.420654296875
+          ],
+          "relative_depth_value": 0.1630898416042328
+        }
+      ]
+    },
+    {
+      "name": "shorter_side_320",
+      "requested_size": 320,
+      "actual_tensor_shape": [
+        1,
+        3,
+        574,
+        322
+      ],
+      "processor_source_image_shape": [
+        1280,
+        720,
+        3
+      ],
+      "processor_size_argument": {
+        "height": 320,
+        "width": 320
+      },
+      "processor_keep_aspect_ratio": true,
+      "processor_ensure_multiple_of": 14,
+      "processor_class": "DPTImageProcessor",
+      "processor_do_resize": true,
+      "processor_do_pad": false,
+      "processor_crop_size": null,
+      "model_output_tensor_shape": [
+        1,
+        574,
+        322
+      ],
+      "depth_ms": {
+        "count": 10,
+        "mean_ms": 677.3470599999999,
+        "median_ms": 673.90995,
+        "min_ms": 663.0918,
+        "max_ms": 693.9522
+      },
+      "depth_preprocessing_ms": {
+        "count": 10,
+        "mean_ms": 18.77985,
+        "median_ms": 19.06465,
+        "min_ms": 16.1435,
+        "max_ms": 21.4931
+      },
+      "depth_model_inference_ms": {
+        "count": 10,
+        "mean_ms": 644.98875,
+        "median_ms": 641.44705,
+        "min_ms": 630.5939,
+        "max_ms": 664.3124
+      },
+      "depth_postprocessing_ms": {
+        "count": 10,
+        "mean_ms": 12.79908,
+        "median_ms": 12.59875,
+        "min_ms": 11.6686,
+        "max_ms": 14.7224
+      },
+      "yolo_bytetrack_ms": {
+        "count": 10,
+        "mean_ms": 84.78171999999999,
+        "median_ms": 84.95345,
+        "min_ms": 78.1412,
+        "max_ms": 92.9852
+      },
+      "spatial_relationships_ms": {
+        "count": 10,
+        "mean_ms": 1.58939,
+        "median_ms": 1.5759500000000002,
+        "min_ms": 1.3944,
+        "max_ms": 1.9483
+      },
+      "scene_memory_ms": {
+        "count": 10,
+        "mean_ms": 0.82833,
+        "median_ms": 0.8506499999999999,
+        "min_ms": 0.5901,
+        "max_ms": 1.1295
+      },
+      "scene_graph_ms": {
+        "count": 10,
+        "mean_ms": 0.6009599999999999,
+        "median_ms": 0.50705,
+        "min_ms": 0.3282,
+        "max_ms": 1.1136
+      },
+      "scene_description_ms": {
+        "count": 10,
+        "mean_ms": 1.32188,
+        "median_ms": 1.31075,
+        "min_ms": 1.0609,
+        "max_ms": 1.6748
+      },
+      "scene_narration_ms": {
+        "count": 10,
+        "mean_ms": 0.18458000000000002,
+        "median_ms": 0.17845,
+        "min_ms": 0.1279,
+        "max_ms": 0.2866
+      },
+      "pipeline_orchestration_ms": {
+        "count": 10,
+        "mean_ms": 5.36999999994805,
+        "median_ms": 5.2523499998642365,
+        "min_ms": 4.525899999862304,
+        "max_ms": 6.235199999537144
+      },
+      "response_preparation_ms": {
+        "count": 10,
+        "mean_ms": 3.46866,
+        "median_ms": 3.4465500000000002,
+        "min_ms": 3.1808,
+        "max_ms": 3.8084
+      },
+      "backend_processing_ms": {
+        "count": 10,
+        "mean_ms": 784.6377500000926,
+        "median_ms": 782.286699999986,
+        "min_ms": 765.7977999997456,
+        "max_ms": 803.5602999998446
+      },
+      "http_round_trip_ms": {
+        "count": 10,
+        "mean_ms": 792.555270000048,
+        "median_ms": 790.3252000000975,
+        "min_ms": 773.4769999997297,
+        "max_ms": 811.4574999999604
+      },
+      "other_ms": 22.508970000092702,
+      "fps": 1.2744734751799565,
+      "depth_valid_on_all_frames": true,
+      "depth_valid_frame_count": 10,
+      "depth_preview": {
+        "all_measured_frames_valid": true,
+        "representative_frame": {
+          "valid": true,
+          "shape": [
+            640,
+            360
+          ],
+          "reason": null
+        }
+      },
+      "detection_summary": {
+        "detections_per_frame": [
+          6,
+          5,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_detections": 46,
+        "class_counts": {
+          "car": 11,
+          "person": 35
+        },
+        "track_ids_and_boxes_compared": true
+      },
+      "representative_frame_depths": [
+        {
+          "object_id": "track:1",
+          "track_id": 1,
+          "class_name": "person",
+          "bounding_box": [
+            248.79904174804688,
+            693.6827392578125,
+            296.8648986816406,
+            834.9425659179688
+          ],
+          "relative_depth_value": 0.21844029426574707
+        },
+        {
+          "object_id": "track:2",
+          "track_id": 2,
+          "class_name": "person",
+          "bounding_box": [
+            562.5112915039062,
+            706.4326171875,
+            619.061767578125,
+            846.8006591796875
+          ],
+          "relative_depth_value": 0.2291288673877716
+        },
+        {
+          "object_id": "track:3",
+          "track_id": 3,
+          "class_name": "person",
+          "bounding_box": [
+            76.35140228271484,
+            704.81201171875,
+            117.80239868164062,
+            837.4262084960938
+          ],
+          "relative_depth_value": 0.2374393343925476
+        },
+        {
+          "object_id": "track:4",
+          "track_id": 4,
+          "class_name": "person",
+          "bounding_box": [
+            520.3324584960938,
+            707.0903930664062,
+            565.9962158203125,
+            834.6578979492188
+          ],
+          "relative_depth_value": 0.21666927635669708
+        },
+        {
+          "object_id": "track:5",
+          "track_id": 5,
+          "class_name": "car",
+          "bounding_box": [
+            609.4452514648438,
+            720.9341430664062,
+            719.1304321289062,
+            821.1294555664062
+          ],
+          "relative_depth_value": 0.2027820348739624
+        },
+        {
+          "object_id": "track:6",
+          "track_id": 6,
+          "class_name": "car",
+          "bounding_box": [
+            620.9132690429688,
+            721.7113647460938,
+            696.7310791015625,
+            749.420654296875
+          ],
+          "relative_depth_value": 0.1911335438489914
+        }
+      ]
+    },
+    {
+      "name": "shorter_side_256",
+      "requested_size": 256,
+      "actual_tensor_shape": [
+        1,
+        3,
+        462,
+        252
+      ],
+      "processor_source_image_shape": [
+        1280,
+        720,
+        3
+      ],
+      "processor_size_argument": {
+        "height": 256,
+        "width": 256
+      },
+      "processor_keep_aspect_ratio": true,
+      "processor_ensure_multiple_of": 14,
+      "processor_class": "DPTImageProcessor",
+      "processor_do_resize": true,
+      "processor_do_pad": false,
+      "processor_crop_size": null,
+      "model_output_tensor_shape": [
+        1,
+        462,
+        252
+      ],
+      "depth_ms": {
+        "count": 10,
+        "mean_ms": 438.84169,
+        "median_ms": 437.7854,
+        "min_ms": 422.3304,
+        "max_ms": 464.8298
+      },
+      "depth_preprocessing_ms": {
+        "count": 10,
+        "mean_ms": 15.93847,
+        "median_ms": 15.386050000000001,
+        "min_ms": 14.3289,
+        "max_ms": 18.3967
+      },
+      "depth_model_inference_ms": {
+        "count": 10,
+        "mean_ms": 411.70340999999996,
+        "median_ms": 409.94,
+        "min_ms": 396.2322,
+        "max_ms": 439.0426
+      },
+      "depth_postprocessing_ms": {
+        "count": 10,
+        "mean_ms": 10.79699,
+        "median_ms": 10.75345,
+        "min_ms": 9.7197,
+        "max_ms": 11.5598
+      },
+      "yolo_bytetrack_ms": {
+        "count": 10,
+        "mean_ms": 85.42918999999999,
+        "median_ms": 85.42975,
+        "min_ms": 80.6993,
+        "max_ms": 95.0342
+      },
+      "spatial_relationships_ms": {
+        "count": 10,
+        "mean_ms": 1.67147,
+        "median_ms": 1.6389,
+        "min_ms": 1.3665,
+        "max_ms": 2.1016
+      },
+      "scene_memory_ms": {
+        "count": 10,
+        "mean_ms": 0.78748,
+        "median_ms": 0.8189500000000001,
+        "min_ms": 0.4904,
+        "max_ms": 1.0365
+      },
+      "scene_graph_ms": {
+        "count": 10,
+        "mean_ms": 0.67447,
+        "median_ms": 0.6547499999999999,
+        "min_ms": 0.4866,
+        "max_ms": 1.1485
+      },
+      "scene_description_ms": {
+        "count": 10,
+        "mean_ms": 1.26864,
+        "median_ms": 1.2511999999999999,
+        "min_ms": 1.0583,
+        "max_ms": 1.602
+      },
+      "scene_narration_ms": {
+        "count": 10,
+        "mean_ms": 0.16612,
+        "median_ms": 0.15689999999999998,
+        "min_ms": 0.1183,
+        "max_ms": 0.244
+      },
+      "pipeline_orchestration_ms": {
+        "count": 10,
+        "mean_ms": 5.439539999952103,
+        "median_ms": 5.467650000355206,
+        "min_ms": 4.719999999906577,
+        "max_ms": 5.98589999935939
+      },
+      "response_preparation_ms": {
+        "count": 10,
+        "mean_ms": 3.44957,
+        "median_ms": 3.3895,
+        "min_ms": 3.2029,
+        "max_ms": 4.0796
+      },
+      "backend_processing_ms": {
+        "count": 10,
+        "mean_ms": 546.7606899997918,
+        "median_ms": 547.2585499996967,
+        "min_ms": 530.4842999994435,
+        "max_ms": 572.5611999996545
+      },
+      "http_round_trip_ms": {
+        "count": 10,
+        "mean_ms": 554.3366199998673,
+        "median_ms": 554.5353000002251,
+        "min_ms": 537.7373000001171,
+        "max_ms": 580.1397999994151
+      },
+      "other_ms": 22.489809999791774,
+      "fps": 1.8289537237952875,
+      "depth_valid_on_all_frames": true,
+      "depth_valid_frame_count": 10,
+      "depth_preview": {
+        "all_measured_frames_valid": true,
+        "representative_frame": {
+          "valid": true,
+          "shape": [
+            640,
+            360
+          ],
+          "reason": null
+        }
+      },
+      "detection_summary": {
+        "detections_per_frame": [
+          6,
+          5,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_detections": 46,
+        "class_counts": {
+          "car": 11,
+          "person": 35
+        },
+        "track_ids_and_boxes_compared": true
+      },
+      "representative_frame_depths": [
+        {
+          "object_id": "track:1",
+          "track_id": 1,
+          "class_name": "person",
+          "bounding_box": [
+            248.79904174804688,
+            693.6827392578125,
+            296.8648986816406,
+            834.9425659179688
+          ],
+          "relative_depth_value": 0.19528403878211975
+        },
+        {
+          "object_id": "track:2",
+          "track_id": 2,
+          "class_name": "person",
+          "bounding_box": [
+            562.5112915039062,
+            706.4326171875,
+            619.061767578125,
+            846.8006591796875
+          ],
+          "relative_depth_value": 0.20645281672477722
+        },
+        {
+          "object_id": "track:3",
+          "track_id": 3,
+          "class_name": "person",
+          "bounding_box": [
+            76.35140228271484,
+            704.81201171875,
+            117.80239868164062,
+            837.4262084960938
+          ],
+          "relative_depth_value": 0.21465317904949188
+        },
+        {
+          "object_id": "track:4",
+          "track_id": 4,
+          "class_name": "person",
+          "bounding_box": [
+            520.3324584960938,
+            707.0903930664062,
+            565.9962158203125,
+            834.6578979492188
+          ],
+          "relative_depth_value": 0.1519072949886322
+        },
+        {
+          "object_id": "track:5",
+          "track_id": 5,
+          "class_name": "car",
+          "bounding_box": [
+            609.4452514648438,
+            720.9341430664062,
+            719.1304321289062,
+            821.1294555664062
+          ],
+          "relative_depth_value": 0.19144150614738464
+        },
+        {
+          "object_id": "track:6",
+          "track_id": 6,
+          "class_name": "car",
+          "bounding_box": [
+            620.9132690429688,
+            721.7113647460938,
+            696.7310791015625,
+            749.420654296875
+          ],
+          "relative_depth_value": 0.1675458401441574
+        }
+      ]
+    },
+    {
+      "name": "shorter_side_224",
+      "requested_size": 224,
+      "actual_tensor_shape": [
+        1,
+        3,
+        392,
+        224
+      ],
+      "processor_source_image_shape": [
+        1280,
+        720,
+        3
+      ],
+      "processor_size_argument": {
+        "height": 224,
+        "width": 224
+      },
+      "processor_keep_aspect_ratio": true,
+      "processor_ensure_multiple_of": 14,
+      "processor_class": "DPTImageProcessor",
+      "processor_do_resize": true,
+      "processor_do_pad": false,
+      "processor_crop_size": null,
+      "model_output_tensor_shape": [
+        1,
+        392,
+        224
+      ],
+      "depth_ms": {
+        "count": 10,
+        "mean_ms": 337.62314000000003,
+        "median_ms": 334.6267,
+        "min_ms": 306.7656,
+        "max_ms": 376.9981
+      },
+      "depth_preprocessing_ms": {
+        "count": 10,
+        "mean_ms": 14.62783,
+        "median_ms": 14.5527,
+        "min_ms": 14.1059,
+        "max_ms": 15.2623
+      },
+      "depth_model_inference_ms": {
+        "count": 10,
+        "mean_ms": 310.4996,
+        "median_ms": 308.35555,
+        "min_ms": 280.3508,
+        "max_ms": 348.8194
+      },
+      "depth_postprocessing_ms": {
+        "count": 10,
+        "mean_ms": 12.10382,
+        "median_ms": 12.37675,
+        "min_ms": 10.042,
+        "max_ms": 13.5786
+      },
+      "yolo_bytetrack_ms": {
+        "count": 10,
+        "mean_ms": 86.11202,
+        "median_ms": 86.3748,
+        "min_ms": 78.9448,
+        "max_ms": 94.5974
+      },
+      "spatial_relationships_ms": {
+        "count": 10,
+        "mean_ms": 5.0597,
+        "median_ms": 1.64115,
+        "min_ms": 1.2937,
+        "max_ms": 36.0195
+      },
+      "scene_memory_ms": {
+        "count": 10,
+        "mean_ms": 0.83782,
+        "median_ms": 0.798,
+        "min_ms": 0.5409,
+        "max_ms": 1.2809
+      },
+      "scene_graph_ms": {
+        "count": 10,
+        "mean_ms": 0.61204,
+        "median_ms": 0.5635,
+        "min_ms": 0.3335,
+        "max_ms": 1.1458
+      },
+      "scene_description_ms": {
+        "count": 10,
+        "mean_ms": 1.2695599999999998,
+        "median_ms": 1.2506499999999998,
+        "min_ms": 1.1259,
+        "max_ms": 1.455
+      },
+      "scene_narration_ms": {
+        "count": 10,
+        "mean_ms": 0.16797,
+        "median_ms": 0.15615,
+        "min_ms": 0.1194,
+        "max_ms": 0.2553
+      },
+      "pipeline_orchestration_ms": {
+        "count": 10,
+        "mean_ms": 8.782610000162094,
+        "median_ms": 5.301350000536331,
+        "min_ms": 4.769699999997101,
+        "max_ms": 40.19109999990178
+      },
+      "response_preparation_ms": {
+        "count": 10,
+        "mean_ms": 3.43917,
+        "median_ms": 3.3544,
+        "min_ms": 3.2196,
+        "max_ms": 3.8432
+      },
+      "backend_processing_ms": {
+        "count": 10,
+        "mean_ms": 449.52878000003693,
+        "median_ms": 445.73480000008203,
+        "min_ms": 424.2758000000322,
+        "max_ms": 486.9727999994211
+      },
+      "http_round_trip_ms": {
+        "count": 10,
+        "mean_ms": 457.10289000007833,
+        "median_ms": 453.3116500001597,
+        "min_ms": 431.4844999998968,
+        "max_ms": 494.78389999967476
+      },
+      "other_ms": 25.793620000036896,
+      "fps": 2.2245516738659488,
+      "depth_valid_on_all_frames": true,
+      "depth_valid_frame_count": 10,
+      "depth_preview": {
+        "all_measured_frames_valid": true,
+        "representative_frame": {
+          "valid": true,
+          "shape": [
+            640,
+            360
+          ],
+          "reason": null
+        }
+      },
+      "detection_summary": {
+        "detections_per_frame": [
+          6,
+          5,
+          5,
+          5,
+          5,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "total_detections": 46,
+        "class_counts": {
+          "car": 11,
+          "person": 35
+        },
+        "track_ids_and_boxes_compared": true
+      },
+      "representative_frame_depths": [
+        {
+          "object_id": "track:1",
+          "track_id": 1,
+          "class_name": "person",
+          "bounding_box": [
+            248.79904174804688,
+            693.6827392578125,
+            296.8648986816406,
+            834.9425659179688
+          ],
+          "relative_depth_value": 0.17399165034294128
+        },
+        {
+          "object_id": "track:2",
+          "track_id": 2,
+          "class_name": "person",
+          "bounding_box": [
+            562.5112915039062,
+            706.4326171875,
+            619.061767578125,
+            846.8006591796875
+          ],
+          "relative_depth_value": 0.22300253808498383
+        },
+        {
+          "object_id": "track:3",
+          "track_id": 3,
+          "class_name": "person",
+          "bounding_box": [
+            76.35140228271484,
+            704.81201171875,
+            117.80239868164062,
+            837.4262084960938
+          ],
+          "relative_depth_value": 0.23932935297489166
+        },
+        {
+          "object_id": "track:4",
+          "track_id": 4,
+          "class_name": "person",
+          "bounding_box": [
+            520.3324584960938,
+            707.0903930664062,
+            565.9962158203125,
+            834.6578979492188
+          ],
+          "relative_depth_value": 0.1440453976392746
+        },
+        {
+          "object_id": "track:5",
+          "track_id": 5,
+          "class_name": "car",
+          "bounding_box": [
+            609.4452514648438,
+            720.9341430664062,
+            719.1304321289062,
+            821.1294555664062
+          ],
+          "relative_depth_value": 0.22173504531383514
+        },
+        {
+          "object_id": "track:6",
+          "track_id": 6,
+          "class_name": "car",
+          "bounding_box": [
+            620.9132690429688,
+            721.7113647460938,
+            696.7310791015625,
+            749.420654296875
+          ],
+          "relative_depth_value": 0.16361193358898163
+        }
+      ]
+    }
+  ],
+  "comparisons_to_baseline": {
+    "shorter_side_320": {
+      "depth_order": {
+        "comparable_pairs": 1,
+        "preserved_orders": 1,
+        "indeterminate_pairs": 84,
+        "agreement": 1.0,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "object_depth_categories": {
+        "comparable_objects": 46,
+        "preserved_categories": 30,
+        "agreement_percent": 65.21739130434783,
+        "disagreements": [
+          {
+            "frame_index": 0,
+            "object_id": "track:4",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 0,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 1,
+            "object_id": "track:4",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 1,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 2,
+            "object_id": "track:1",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 2,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:3",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 5,
+            "object_id": "track:2",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 5,
+            "object_id": "track:3",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 6,
+            "object_id": "track:2",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 6,
+            "object_id": "track:3",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          }
+        ]
+      },
+      "image_space_relationships": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "depth_relationships": {
+        "baseline_relation_counts": {
+          "farther_than": 21,
+          "nearer_than": 21,
+          "similar_depth": 128
+        },
+        "candidate_relation_counts": {
+          "farther_than": 1,
+          "nearer_than": 1,
+          "similar_depth": 168
+        },
+        "frames_with_relation_changes": 5,
+        "disagreements": [
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:1",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:2",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:2",
+              "nearer_than",
+              "track:6"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:3",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:3",
+              "nearer_than",
+              "track:6"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:4",
+              "farther_than",
+              "track:1"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:1",
+              "similar_depth",
+              "track:4"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:2",
+              "similar_depth",
+              "track:4"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:2",
+              "similar_depth",
+              "track:6"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:3",
+              "similar_depth",
+              "track:4"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:3",
+              "similar_depth",
+              "track:6"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:4",
+              "similar_depth",
+              "track:1"
+            ]
+          }
+        ]
+      },
+      "detection_tracking": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "identical": true,
+        "first_mismatch": null
+      }
+    },
+    "shorter_side_256": {
+      "depth_order": {
+        "comparable_pairs": 16,
+        "preserved_orders": 16,
+        "indeterminate_pairs": 69,
+        "agreement": 1.0,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "object_depth_categories": {
+        "comparable_objects": 46,
+        "preserved_categories": 31,
+        "agreement_percent": 67.3913043478261,
+        "disagreements": [
+          {
+            "frame_index": 1,
+            "object_id": "track:1",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 1,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 4,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 4,
+            "object_id": "track:2",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 7,
+            "object_id": "track:2",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 7,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 8,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 8,
+            "object_id": "track:2",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 8,
+            "object_id": "track:3",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 8,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          }
+        ]
+      },
+      "image_space_relationships": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "depth_relationships": {
+        "baseline_relation_counts": {
+          "farther_than": 21,
+          "nearer_than": 21,
+          "similar_depth": 128
+        },
+        "candidate_relation_counts": {
+          "farther_than": 16,
+          "nearer_than": 16,
+          "similar_depth": 138
+        },
+        "frames_with_relation_changes": 2,
+        "disagreements": [
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:1",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:2",
+              "nearer_than",
+              "track:6"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:3",
+              "nearer_than",
+              "track:6"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:4",
+              "farther_than",
+              "track:1"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:4",
+              "farther_than",
+              "track:5"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:5",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:1",
+              "similar_depth",
+              "track:4"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:2",
+              "similar_depth",
+              "track:6"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:3",
+              "similar_depth",
+              "track:6"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:4",
+              "similar_depth",
+              "track:1"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:4",
+              "similar_depth",
+              "track:5"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:5",
+              "similar_depth",
+              "track:4"
+            ]
+          }
+        ]
+      },
+      "detection_tracking": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "identical": true,
+        "first_mismatch": null
+      }
+    },
+    "shorter_side_224": {
+      "depth_order": {
+        "comparable_pairs": 17,
+        "preserved_orders": 17,
+        "indeterminate_pairs": 68,
+        "agreement": 1.0,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "object_depth_categories": {
+        "comparable_objects": 46,
+        "preserved_categories": 24,
+        "agreement_percent": 52.17391304347826,
+        "disagreements": [
+          {
+            "frame_index": 1,
+            "object_id": "track:2",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 1,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 2,
+            "object_id": "track:2",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 2,
+            "object_id": "track:5",
+            "baseline_category": "middle",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:2",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 3,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 4,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 4,
+            "object_id": "track:2",
+            "baseline_category": "nearer",
+            "candidate_category": "middle"
+          },
+          {
+            "frame_index": 4,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "nearer"
+          },
+          {
+            "frame_index": 5,
+            "object_id": "track:1",
+            "baseline_category": "middle",
+            "candidate_category": "farther"
+          },
+          {
+            "frame_index": 5,
+            "object_id": "track:5",
+            "baseline_category": "farther",
+            "candidate_category": "middle"
+          }
+        ]
+      },
+      "image_space_relationships": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "agreement_percent": 100.0,
+        "disagreements": []
+      },
+      "depth_relationships": {
+        "baseline_relation_counts": {
+          "farther_than": 21,
+          "nearer_than": 21,
+          "similar_depth": 128
+        },
+        "candidate_relation_counts": {
+          "farther_than": 23,
+          "nearer_than": 23,
+          "similar_depth": 124
+        },
+        "frames_with_relation_changes": 5,
+        "disagreements": [
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:1",
+              "nearer_than",
+              "track:4"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:1",
+              "similar_depth",
+              "track:3"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:3",
+              "similar_depth",
+              "track:1"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:4",
+              "farther_than",
+              "track:1"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:5",
+              "similar_depth",
+              "track:6"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": [
+              "track:6",
+              "similar_depth",
+              "track:5"
+            ],
+            "candidate": null
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:1",
+              "farther_than",
+              "track:3"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:1",
+              "similar_depth",
+              "track:4"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:3",
+              "nearer_than",
+              "track:1"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:4",
+              "similar_depth",
+              "track:1"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:5",
+              "nearer_than",
+              "track:6"
+            ]
+          },
+          {
+            "frame_index": 0,
+            "baseline": null,
+            "candidate": [
+              "track:6",
+              "farther_than",
+              "track:5"
+            ]
+          }
+        ]
+      },
+      "detection_tracking": {
+        "identical_frames": 10,
+        "measured_frames": 10,
+        "identical": true,
+        "first_mismatch": null
+      }
+    }
+  }
+}
