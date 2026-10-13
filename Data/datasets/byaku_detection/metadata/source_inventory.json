@@ -1,0 +1,127 @@
+{
+  "annotation_metadata_found": [],
+  "candidate_sources": [
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 141,
+      "image_count_semantics": "decoded source video frame count",
+      "reason_for_exclusion": null,
+      "source_path": "indoor_objects_video.mp4",
+      "source_type": "local_byaku_video",
+      "suitability": "manual_annotation_candidate",
+      "suitable": true
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 1,
+      "image_count_semantics": "source image file count",
+      "reason_for_exclusion": null,
+      "source_path": "bedroom_scene_desk.jpg",
+      "source_type": "local_byaku_test_image",
+      "suitability": "manual_annotation_candidate",
+      "suitable": true
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 1,
+      "image_count_semantics": "source image file count",
+      "reason_for_exclusion": null,
+      "source_path": "bedroom_scene_window.jpg",
+      "source_type": "local_byaku_test_image",
+      "suitability": "manual_annotation_candidate",
+      "suitable": true
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "files": [],
+      "image_count": 0,
+      "image_count_semantics": "generated preview image file count",
+      "reason_for_exclusion": "Generated depth/detection visualizations are not original RGB training images.",
+      "source_path": "legacy generated previews (not retained)",
+      "source_type": "generated_depth_or_detection_preview",
+      "suitability": "excluded",
+      "suitable": false
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 1,
+      "image_count_semantics": "source image file count",
+      "reason_for_exclusion": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/byakugan-logo.jpg",
+      "source_type": "UI_branding_asset",
+      "suitability": "excluded",
+      "suitable": false
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 1,
+      "image_count_semantics": "source image file count",
+      "reason_for_exclusion": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/galaxy.jpg",
+      "source_type": "UI_branding_asset",
+      "suitability": "excluded",
+      "suitable": false
+    },
+    {
+      "annotation_format": "none",
+      "available": true,
+      "available_classes": [],
+      "available_classes_basis": "No verified source annotations were available.",
+      "image_count": 0,
+      "image_count_semantics": "source image file count",
+      "reason_for_exclusion": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/byaku-fire.mp4",
+      "source_type": "UI_branding_asset",
+      "suitability": "excluded",
+      "suitable": false
+    }
+  ],
+  "generated_at": "2026-10-08T16:24:03.445039+00:00",
+  "inventory_scope": "Repository media candidates and common local public-dataset directory names were checked; virtual environments, generated previews, and UI assets are not training sources.",
+  "local_public_source_directories": [
+    {
+      "available": false,
+      "path": "datasets"
+    },
+    {
+      "available": false,
+      "path": "dataset"
+    },
+    {
+      "available": false,
+      "path": "coco"
+    },
+    {
+      "available": false,
+      "path": "openimages"
+    },
+    {
+      "available": false,
+      "path": "objects365"
+    },
+    {
+      "available": false,
+      "path": "roboflow"
+    }
+  ],
+  "public_source_status": "not_locally_available",
+  "scanned_for_annotation_metadata": true
+}

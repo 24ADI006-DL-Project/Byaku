@@ -1,0 +1,47 @@
+{
+  "candidate_images_total": 32320,
+  "valid_licensed_images": 32320,
+  "unlicensed_images": 0,
+  "classes": {
+    "/m/01g317": {
+      "name": "Person",
+      "boxes": 70138,
+      "images": 28832
+    },
+    "/m/04dr76w": {
+      "name": "Bottle",
+      "boxes": 1978,
+      "images": 828
+    },
+    "/m/0bt_c3": {
+      "name": "Book",
+      "boxes": 3129,
+      "images": 409
+    },
+    "/m/01mzpv": {
+      "name": "Chair",
+      "boxes": 3297,
+      "images": 1255
+    },
+    "/m/04bcr3": {
+      "name": "Table",
+      "boxes": 3960,
+      "images": 2307
+    },
+    "/m/050k8": {
+      "name": "Mobile phone",
+      "boxes": 610,
+      "images": 465
+    },
+    "/m/01c648": {
+      "name": "Laptop",
+      "boxes": 305,
+      "images": 249
+    },
+    "/m/0n5v01m": {
+      "name": "Bag",
+      "boxes": 0,
+      "images": 0
+    }
+  }
+}

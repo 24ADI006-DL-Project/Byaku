@@ -1,0 +1,164 @@
+{
+  "annotation_counts": {
+    "bounding_boxes": 0,
+    "per_class": {
+      "bag": 0,
+      "book": 0,
+      "bottle": 0,
+      "chair": 0,
+      "laptop": 0,
+      "mobile_phone": 0,
+      "person": 0,
+      "table": 0
+    }
+  },
+  "creation_timestamp": "2026-10-08T16:24:05.644411+00:00",
+  "dataset_version": "byaku_detection_v1",
+  "excluded_files": [
+    {
+      "reason": "Generated depth/detection visualizations are not original RGB training images.",
+      "source_path": "legacy generated previews (not retained)"
+    },
+    {
+      "reason": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/byakugan-logo.jpg"
+    },
+    {
+      "reason": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/galaxy.jpg"
+    },
+    {
+      "reason": "Frontend artwork/video is not a BYAKU camera training sample.",
+      "source_path": "UI/public/assets/byaku-fire.mp4"
+    }
+  ],
+  "image_counts": {
+    "annotated_images": 0,
+    "candidate_images_for_manual_annotation": 22,
+    "dataset_split_images": 22
+  },
+  "manual_annotation_queue_count": 22,
+  "sha256_hashes": {
+    "images/test/bedroom_scene_window.jpg": "ddbc7e09fbbc557cc1f64492c39bc8b64313eaa0c725fb31dae3987259788d73",
+    "images/train/pinterest-video_frame_000002.jpg": "e89e07cce687330c0b70a037075db942e2cf6c945427617cb036c7fffec0f6ba",
+    "images/train/pinterest-video_frame_000009.jpg": "4b4a50611a9bff0f4b123a0b3402232c981092b8740f16d808aedf622beb802f",
+    "images/train/pinterest-video_frame_000017.jpg": "93e5d4c3da4b9fc854072ee49e78117a80ec00d26de945acc35c2239edc616f7",
+    "images/train/pinterest-video_frame_000024.jpg": "33468169d26341cc02b2b55d118ccdc9db6cdf919599414d01a8a7d23b8a3ca3",
+    "images/train/pinterest-video_frame_000031.jpg": "b28df6f5997a8f7caef2aa82c33bdb65002faac3403bdecc3eab97478ab41c76",
+    "images/train/pinterest-video_frame_000038.jpg": "3575a931d2ed013bbb9e11259f05042abf86b536291157d39a89b234b7c3fb98",
+    "images/train/pinterest-video_frame_000046.jpg": "5d3eb91dcd9dd9120ec13aedb693e2ac1d54775d367666dc956fcef6ae881849",
+    "images/train/pinterest-video_frame_000053.jpg": "e34362c6bd7d2f5d260937299682d7451e685702f4e76e436122b53fa5c7f747",
+    "images/train/pinterest-video_frame_000060.jpg": "7e0d1c7a5ce4ed17aa3c13a861d295f843264a4f249879b4326c87fd493d7910",
+    "images/train/pinterest-video_frame_000067.jpg": "68e7220f1e5ee8fef1d7a51b7971b1de3aa0f247732660797d7de5f0b035c346",
+    "images/train/pinterest-video_frame_000075.jpg": "bd57bdf07e640c196d687d1cfba1bc6b346462ce0be8c8bbc6d071c574ab2dbd",
+    "images/train/pinterest-video_frame_000082.jpg": "ac31affcb6b181a31830de96be91b0cdda42ccecf7025554dafcc2acadd53d62",
+    "images/train/pinterest-video_frame_000089.jpg": "68369ac7f806a3dee5cb9ac35bdbcb85f5c931a48fe1e92d8f3e60ccd6a2107f",
+    "images/train/pinterest-video_frame_000096.jpg": "62f1dc417c34133cfe75c396cc93d8a04d1c5686b228ef7774541bdec103db5e",
+    "images/train/pinterest-video_frame_000104.jpg": "ccedaaba93ca1608a8410e49649d6ef1a07b052eb13a103884c1542db032d06e",
+    "images/train/pinterest-video_frame_000111.jpg": "090f7360a47a16f5ddff9cf29eee841bd1d91c1efc644d6b1ae17f9b158eff9b",
+    "images/train/pinterest-video_frame_000118.jpg": "2aba74a0ed4e839d553f4ad9a99ec4540a8396ffccd35d9a726718f6d711e189",
+    "images/train/pinterest-video_frame_000125.jpg": "f0b83ad8434ccbcd3ab152fd48b76a2bc8fea0fe4a81bb2664513e7e951bb11d",
+    "images/train/pinterest-video_frame_000133.jpg": "3809aa94c46386197e5ef19bf7198c114c1b5191e4f84f1c351e200c52d17993",
+    "images/train/pinterest-video_frame_000140.jpg": "1eaa7229c739dd045bb788c6daa870b3608e992bb6dd64d52d34467f5a786e0f",
+    "images/val/bedroom_scene_desk.jpg": "be7f4a52724f6334c3c20db456023b40a890ee2c7778b6c9dcffb996622bfce3"
+  },
+  "source_datasets": {
+    "local_sources": [
+      {
+        "annotation_format": "none",
+        "available": true,
+        "available_classes": [],
+        "available_classes_basis": "No verified source annotations were available.",
+        "image_count": 141,
+        "image_count_semantics": "decoded source video frame count",
+        "reason_for_exclusion": null,
+        "source_path": "indoor_objects_video.mp4",
+        "source_type": "local_byaku_video",
+        "suitability": "manual_annotation_candidate",
+        "suitable": true
+      },
+      {
+        "annotation_format": "none",
+        "available": true,
+        "available_classes": [],
+        "available_classes_basis": "No verified source annotations were available.",
+        "image_count": 1,
+        "image_count_semantics": "source image file count",
+        "reason_for_exclusion": null,
+        "source_path": "bedroom_scene_desk.jpg",
+        "source_type": "local_byaku_test_image",
+        "suitability": "manual_annotation_candidate",
+        "suitable": true
+      },
+      {
+        "annotation_format": "none",
+        "available": true,
+        "available_classes": [],
+        "available_classes_basis": "No verified source annotations were available.",
+        "image_count": 1,
+        "image_count_semantics": "source image file count",
+        "reason_for_exclusion": null,
+        "source_path": "bedroom_scene_window.jpg",
+        "source_type": "local_byaku_test_image",
+        "suitability": "manual_annotation_candidate",
+        "suitable": true
+      }
+    ],
+    "public_source_status": "not_locally_available"
+  },
+  "split_counts": {
+    "test": 1,
+    "train": 20,
+    "val": 1
+  },
+  "split_note": "The source video is kept within one split to avoid frame leakage. With only one video sequence and two standalone images, the target ratios cannot be met exactly.",
+  "split_percentages": {
+    "test": 4.545454545454546,
+    "train": 90.9090909090909,
+    "val": 4.545454545454546
+  },
+  "target_classes": [
+    {
+      "class_id": 0,
+      "name": "person"
+    },
+    {
+      "class_id": 1,
+      "name": "bottle"
+    },
+    {
+      "class_id": 2,
+      "name": "book"
+    },
+    {
+      "class_id": 3,
+      "name": "chair"
+    },
+    {
+      "class_id": 4,
+      "name": "table"
+    },
+    {
+      "class_id": 5,
+      "name": "mobile_phone"
+    },
+    {
+      "class_id": 6,
+      "name": "laptop"
+    },
+    {
+      "class_id": 7,
+      "name": "bag"
+    }
+  ],
+  "validation_result": {
+    "malformed_label_count": 0,
+    "missing_label_count": 22,
+    "out_of_bounds_box_count": 0,
+    "ready_for_training": false,
+    "structural_errors": [
+      "one or more images are missing labels"
+    ],
+    "valid": false
+  }
+}

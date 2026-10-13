@@ -1,0 +1,19 @@
+{
+  "settings_version": "0.0.8",
+  "datasets_dir": "C:\\Users\\piriyadharshini\\OneDrive\\Desktop\\datasets",
+  "weights_dir": "C:\\Users\\piriyadharshini\\OneDrive\\Desktop\\Byaku\\weights",
+  "runs_dir": "C:\\Users\\piriyadharshini\\OneDrive\\Desktop\\Byaku\\runs",
+  "uuid": "aa40ba55c2f16343c403bc2fd402a3512bce121a11ae6527020d7fc4ca570d38",
+  "sync": true,
+  "api_key": "",
+  "openai_api_key": "",
+  "clearml": true,
+  "comet": true,
+  "dvc": true,
+  "mlflow": true,
+  "raytune": true,
+  "tensorboard": false,
+  "wandb": false,
+  "vscode_msg": true,
+  "openvino_msg": true
+}

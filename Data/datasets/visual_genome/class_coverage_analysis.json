@@ -1,0 +1,459 @@
+{
+  "mapping_class_count": 74,
+  "selection_policy": "exact normalized label match; objects whose alternative names map to multiple IDs are excluded as ambiguous",
+  "counts": {
+    "source_object_records": 2516939,
+    "valid_source_boxes": 2490959,
+    "unknown_objects": 2034966,
+    "mapped_objects": 481973,
+    "valid_mapped_boxes": 477463,
+    "invalid_source_boxes": 25980,
+    "mapped_objects_with_invalid_boxes": 4510
+  },
+  "class_counts": [
+    {
+      "class_id": 0,
+      "class_name": "airplane",
+      "valid_boxes": 2120,
+      "images": 1613
+    },
+    {
+      "class_id": 1,
+      "class_name": "backpack",
+      "valid_boxes": 2387,
+      "images": 2092
+    },
+    {
+      "class_id": 2,
+      "class_name": "bag",
+      "valid_boxes": 7043,
+      "images": 5598
+    },
+    {
+      "class_id": 3,
+      "class_name": "bed",
+      "valid_boxes": 2833,
+      "images": 2570
+    },
+    {
+      "class_id": 4,
+      "class_name": "belt",
+      "valid_boxes": 1705,
+      "images": 1622
+    },
+    {
+      "class_id": 5,
+      "class_name": "bicycle",
+      "valid_boxes": 1954,
+      "images": 1547
+    },
+    {
+      "class_id": 6,
+      "class_name": "bike",
+      "valid_boxes": 3225,
+      "images": 2458
+    },
+    {
+      "class_id": 7,
+      "class_name": "boat",
+      "valid_boxes": 5648,
+      "images": 2743
+    },
+    {
+      "class_id": 8,
+      "class_name": "book",
+      "valid_boxes": 3549,
+      "images": 1724
+    },
+    {
+      "class_id": 9,
+      "class_name": "boots",
+      "valid_boxes": 1298,
+      "images": 1146
+    },
+    {
+      "class_id": 10,
+      "class_name": "bottle",
+      "valid_boxes": 6101,
+      "images": 4100
+    },
+    {
+      "class_id": 11,
+      "class_name": "bowl",
+      "valid_boxes": 4725,
+      "images": 3470
+    },
+    {
+      "class_id": 12,
+      "class_name": "boy",
+      "valid_boxes": 6924,
+      "images": 5099
+    },
+    {
+      "class_id": 13,
+      "class_name": "bus",
+      "valid_boxes": 4640,
+      "images": 3580
+    },
+    {
+      "class_id": 14,
+      "class_name": "cabinet",
+      "valid_boxes": 3370,
+      "images": 2208
+    },
+    {
+      "class_id": 15,
+      "class_name": "camera",
+      "valid_boxes": 1837,
+      "images": 1671
+    },
+    {
+      "class_id": 16,
+      "class_name": "car",
+      "valid_boxes": 16052,
+      "images": 9133
+    },
+    {
+      "class_id": 17,
+      "class_name": "cell phone",
+      "valid_boxes": 1181,
+      "images": 1053
+    },
+    {
+      "class_id": 18,
+      "class_name": "chair",
+      "valid_boxes": 10328,
+      "images": 6757
+    },
+    {
+      "class_id": 19,
+      "class_name": "child",
+      "valid_boxes": 2317,
+      "images": 1805
+    },
+    {
+      "class_id": 20,
+      "class_name": "clock",
+      "valid_boxes": 4930,
+      "images": 3940
+    },
+    {
+      "class_id": 21,
+      "class_name": "coat",
+      "valid_boxes": 4134,
+      "images": 3426
+    },
+    {
+      "class_id": 22,
+      "class_name": "computer",
+      "valid_boxes": 1602,
+      "images": 1304
+    },
+    {
+      "class_id": 23,
+      "class_name": "couch",
+      "valid_boxes": 1853,
+      "images": 1685
+    },
+    {
+      "class_id": 24,
+      "class_name": "cup",
+      "valid_boxes": 3924,
+      "images": 3067
+    },
+    {
+      "class_id": 25,
+      "class_name": "desk",
+      "valid_boxes": 2292,
+      "images": 2004
+    },
+    {
+      "class_id": 26,
+      "class_name": "door",
+      "valid_boxes": 12276,
+      "images": 9755
+    },
+    {
+      "class_id": 27,
+      "class_name": "doors",
+      "valid_boxes": 1193,
+      "images": 1037
+    },
+    {
+      "class_id": 28,
+      "class_name": "dress",
+      "valid_boxes": 2078,
+      "images": 1824
+    },
+    {
+      "class_id": 29,
+      "class_name": "fork",
+      "valid_boxes": 2227,
+      "images": 1941
+    },
+    {
+      "class_id": 30,
+      "class_name": "girl",
+      "valid_boxes": 5733,
+      "images": 4500
+    },
+    {
+      "class_id": 31,
+      "class_name": "glasses",
+      "valid_boxes": 5283,
+      "images": 4676
+    },
+    {
+      "class_id": 32,
+      "class_name": "hat",
+      "valid_boxes": 9550,
+      "images": 7834
+    },
+    {
+      "class_id": 33,
+      "class_name": "helmet",
+      "valid_boxes": 7034,
+      "images": 5377
+    },
+    {
+      "class_id": 34,
+      "class_name": "jacket",
+      "valid_boxes": 9719,
+      "images": 7624
+    },
+    {
+      "class_id": 35,
+      "class_name": "jeans",
+      "valid_boxes": 5133,
+      "images": 4579
+    },
+    {
+      "class_id": 36,
+      "class_name": "keyboard",
+      "valid_boxes": 2041,
+      "images": 1763
+    },
+    {
+      "class_id": 37,
+      "class_name": "knife",
+      "valid_boxes": 2082,
+      "images": 1793
+    },
+    {
+      "class_id": 38,
+      "class_name": "laptop",
+      "valid_boxes": 2181,
+      "images": 1793
+    },
+    {
+      "class_id": 39,
+      "class_name": "man",
+      "valid_boxes": 44762,
+      "images": 28740
+    },
+    {
+      "class_id": 40,
+      "class_name": "mouse",
+      "valid_boxes": 1164,
+      "images": 1044
+    },
+    {
+      "class_id": 41,
+      "class_name": "pants",
+      "valid_boxes": 12441,
+      "images": 10540
+    },
+    {
+      "class_id": 42,
+      "class_name": "paper",
+      "valid_boxes": 3904,
+      "images": 3109
+    },
+    {
+      "class_id": 43,
+      "class_name": "people",
+      "valid_boxes": 13731,
+      "images": 9441
+    },
+    {
+      "class_id": 44,
+      "class_name": "person",
+      "valid_boxes": 30628,
+      "images": 15798
+    },
+    {
+      "class_id": 45,
+      "class_name": "phone",
+      "valid_boxes": 2205,
+      "images": 1965
+    },
+    {
+      "class_id": 46,
+      "class_name": "plate",
+      "valid_boxes": 9553,
+      "images": 6818
+    },
+    {
+      "class_id": 47,
+      "class_name": "pot",
+      "valid_boxes": 2306,
+      "images": 1664
+    },
+    {
+      "class_id": 48,
+      "class_name": "purse",
+      "valid_boxes": 1144,
+      "images": 1067
+    },
+    {
+      "class_id": 49,
+      "class_name": "ramp",
+      "valid_boxes": 1222,
+      "images": 1077
+    },
+    {
+      "class_id": 50,
+      "class_name": "scarf",
+      "valid_boxes": 1137,
+      "images": 1049
+    },
+    {
+      "class_id": 51,
+      "class_name": "screen",
+      "valid_boxes": 2203,
+      "images": 1923
+    },
+    {
+      "class_id": 52,
+      "class_name": "shirt",
+      "valid_boxes": 33175,
+      "images": 23060
+    },
+    {
+      "class_id": 53,
+      "class_name": "shoe",
+      "valid_boxes": 9224,
+      "images": 5808
+    },
+    {
+      "class_id": 54,
+      "class_name": "shoes",
+      "valid_boxes": 4886,
+      "images": 4184
+    },
+    {
+      "class_id": 55,
+      "class_name": "shorts",
+      "valid_boxes": 7528,
+      "images": 6193
+    },
+    {
+      "class_id": 56,
+      "class_name": "sink",
+      "valid_boxes": 2879,
+      "images": 2525
+    },
+    {
+      "class_id": 57,
+      "class_name": "socks",
+      "valid_boxes": 1580,
+      "images": 1319
+    },
+    {
+      "class_id": 58,
+      "class_name": "spoon",
+      "valid_boxes": 1521,
+      "images": 1283
+    },
+    {
+      "class_id": 59,
+      "class_name": "stairs",
+      "valid_boxes": 1197,
+      "images": 1079
+    },
+    {
+      "class_id": 60,
+      "class_name": "stove",
+      "valid_boxes": 1087,
+      "images": 1023
+    },
+    {
+      "class_id": 61,
+      "class_name": "sunglasses",
+      "valid_boxes": 3320,
+      "images": 2840
+    },
+    {
+      "class_id": 62,
+      "class_name": "table",
+      "valid_boxes": 14703,
+      "images": 12476
+    },
+    {
+      "class_id": 63,
+      "class_name": "tie",
+      "valid_boxes": 2380,
+      "images": 1929
+    },
+    {
+      "class_id": 64,
+      "class_name": "toilet",
+      "valid_boxes": 2228,
+      "images": 1965
+    },
+    {
+      "class_id": 65,
+      "class_name": "train",
+      "valid_boxes": 4562,
+      "images": 3732
+    },
+    {
+      "class_id": 66,
+      "class_name": "truck",
+      "valid_boxes": 3382,
+      "images": 2842
+    },
+    {
+      "class_id": 67,
+      "class_name": "uniform",
+      "valid_boxes": 2212,
+      "images": 1567
+    },
+    {
+      "class_id": 68,
+      "class_name": "van",
+      "valid_boxes": 1558,
+      "images": 1395
+    },
+    {
+      "class_id": 69,
+      "class_name": "vehicle",
+      "valid_boxes": 2141,
+      "images": 1532
+    },
+    {
+      "class_id": 70,
+      "class_name": "watch",
+      "valid_boxes": 2131,
+      "images": 2034
+    },
+    {
+      "class_id": 71,
+      "class_name": "window",
+      "valid_boxes": 50496,
+      "images": 19326
+    },
+    {
+      "class_id": 72,
+      "class_name": "windows",
+      "valid_boxes": 8200,
+      "images": 5693
+    },
+    {
+      "class_id": 73,
+      "class_name": "woman",
+      "valid_boxes": 16171,
+      "images": 12024
+    }
+  ]
+}

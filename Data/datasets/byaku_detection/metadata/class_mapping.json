@@ -1,0 +1,34 @@
+{
+  "bag": {
+    "byaku_class_id": 7,
+    "source_classes": []
+  },
+  "book": {
+    "byaku_class_id": 2,
+    "source_classes": []
+  },
+  "bottle": {
+    "byaku_class_id": 1,
+    "source_classes": []
+  },
+  "chair": {
+    "byaku_class_id": 3,
+    "source_classes": []
+  },
+  "laptop": {
+    "byaku_class_id": 6,
+    "source_classes": []
+  },
+  "mobile_phone": {
+    "byaku_class_id": 5,
+    "source_classes": []
+  },
+  "person": {
+    "byaku_class_id": 0,
+    "source_classes": []
+  },
+  "table": {
+    "byaku_class_id": 4,
+    "source_classes": []
+  }
+}

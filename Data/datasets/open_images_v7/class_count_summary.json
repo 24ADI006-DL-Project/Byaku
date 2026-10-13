@@ -1,0 +1,94 @@
+{
+  "classes": {
+    "person": {
+      "id": 0,
+      "mid": "/m/01g317",
+      "train_boxes": 400,
+      "val_boxes": 86,
+      "test_boxes": 33,
+      "total_boxes": 519,
+      "total_images": 219
+    },
+    "bottle": {
+      "id": 1,
+      "mid": "/m/04dr76w",
+      "train_boxes": 148,
+      "val_boxes": 59,
+      "test_boxes": 38,
+      "total_boxes": 245,
+      "total_images": 89
+    },
+    "book": {
+      "id": 2,
+      "mid": "/m/0bt_c3",
+      "train_boxes": 420,
+      "val_boxes": 79,
+      "test_boxes": 71,
+      "total_boxes": 570,
+      "total_images": 87
+    },
+    "chair": {
+      "id": 3,
+      "mid": "/m/01mzpv",
+      "train_boxes": 268,
+      "val_boxes": 48,
+      "test_boxes": 21,
+      "total_boxes": 337,
+      "total_images": 113
+    },
+    "table": {
+      "id": 4,
+      "mid": "/m/04bcr3",
+      "train_boxes": 206,
+      "val_boxes": 50,
+      "test_boxes": 21,
+      "total_boxes": 277,
+      "total_images": 144
+    },
+    "mobile_phone": {
+      "id": 5,
+      "mid": "/m/050k8",
+      "train_boxes": 68,
+      "val_boxes": 31,
+      "test_boxes": 13,
+      "total_boxes": 112,
+      "total_images": 88
+    },
+    "laptop": {
+      "id": 6,
+      "mid": "/m/01c648",
+      "train_boxes": 75,
+      "val_boxes": 19,
+      "test_boxes": 13,
+      "total_boxes": 107,
+      "total_images": 87
+    },
+    "bag": {
+      "id": 7,
+      "mid": "/m/0n5v01m",
+      "train_boxes": 0,
+      "val_boxes": 0,
+      "test_boxes": 0,
+      "total_boxes": 0,
+      "total_images": 0
+    }
+  },
+  "splits": {
+    "train": {
+      "images": 420,
+      "boxes": 1585
+    },
+    "val": {
+      "images": 120,
+      "boxes": 372
+    },
+    "test": {
+      "images": 60,
+      "boxes": 210
+    },
+    "total": {
+      "images": 600,
+      "boxes": 2167
+    }
+  }
+}

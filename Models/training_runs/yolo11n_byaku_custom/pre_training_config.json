@@ -1,0 +1,31 @@
+{
+  "env": {
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "torch": "2.14.0+cpu",
+    "cuda_available": false,
+    "device": "cpu",
+    "ultralytics": "8.4.166",
+    "ram_total_gb": 15.75,
+    "ram_available_gb": 4.27,
+    "original_checkpoint_path": "Models\\yolo11n.pt",
+    "original_checkpoint_size_bytes": 5613764
+  },
+  "config": {
+    "model": "Models\\yolo11n.pt",
+    "data": "Data\\datasets\\open_images_v7\\byaku_yolo_v7\\data.yaml",
+    "epochs": 20,
+    "patience": 5,
+    "batch": 16,
+    "imgsz": 640,
+    "device": "cpu",
+    "workers": 2,
+    "seed": 42,
+    "deterministic": true,
+    "project": "Models\\training_runs",
+    "name": "yolo11n_byaku_custom",
+    "exist_ok": true,
+    "plots": true,
+    "save": true,
+    "verbose": true
+  }
+}

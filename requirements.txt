@@ -1,6 +1,10 @@
 # Core computer vision and runtime packages
 opencv-python>=4.10.0
 numpy>=1.26.0
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0
+websockets>=12.0
 
 # Recommended project stack for later stages
 torch>=2.2.0
@@ -15,3 +19,7 @@ vosk>=0.3.45
 # Optional for later modules
 # depth-anything-v2
 # boxmot
+
+# Test dependencies
+pytest>=8.0.0
+httpx>=0.27.0

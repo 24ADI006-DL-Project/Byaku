@@ -1,0 +1,67 @@
+{
+  "source_manifest": "Data\\datasets\\open_images_v7\\manifests\\byaku_full_dataset_manifest.json",
+  "dataset_root": "Data\\datasets\\prepared_open_images_v7_full600",
+  "image_counts": {
+    "train": 420,
+    "val": 120,
+    "test": 60
+  },
+  "image_count": 600,
+  "valid_box_count": 2167,
+  "class_box_counts": {
+    "person": 519,
+    "bottle": 245,
+    "book": 570,
+    "chair": 337,
+    "table": 277,
+    "mobile_phone": 112,
+    "laptop": 107,
+    "bag": 0
+  },
+  "class_image_counts": {
+    "person": 219,
+    "bottle": 89,
+    "book": 87,
+    "chair": 113,
+    "table": 144,
+    "mobile_phone": 88,
+    "laptop": 87,
+    "bag": 0
+  },
+  "cross_split_exact_duplicate_groups": 0,
+  "cross_split_near_duplicate_pairs_phash_le_4": 0,
+  "source_label_manifest_mismatches": 0,
+  "image_level_cc_by_2_attributions": 600,
+  "untrained_classes": [
+    "bag"
+  ],
+  "box_counts_by_split": {
+    "train": {
+      "person": 400,
+      "bottle": 148,
+      "book": 420,
+      "chair": 268,
+      "table": 206,
+      "mobile_phone": 68,
+      "laptop": 75
+    },
+    "val": {
+      "person": 86,
+      "bottle": 59,
+      "book": 79,
+      "chair": 48,
+      "table": 50,
+      "mobile_phone": 31,
+      "laptop": 19
+    },
+    "test": {
+      "person": 33,
+      "bottle": 38,
+      "book": 71,
+      "chair": 21,
+      "table": 21,
+      "mobile_phone": 13,
+      "laptop": 13
+    }
+  }
+}

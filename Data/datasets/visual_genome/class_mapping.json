@@ -1,0 +1,640 @@
+{
+  "source": "ranjaykrishna/visual_genome",
+  "source_revision": "65bc9e7e7353fff750326c9523e384701934e530",
+  "policy": "Exact normalized source labels only; no implicit synonym, singular/plural, parent/child, or gender merges. Initial coverage seeds require at least 1,000 distinct images in the inspected object annotations; this is a review heuristic, not a claim of training sufficiency.",
+  "id_policy": "IDs are persistent. Do not reorder or renumber existing entries; append future reviewed classes.",
+  "classes": [
+    {
+      "class_id": 0,
+      "canonical_name": "airplane",
+      "source_labels": [
+        "airplane"
+      ]
+    },
+    {
+      "class_id": 1,
+      "canonical_name": "backpack",
+      "source_labels": [
+        "backpack"
+      ]
+    },
+    {
+      "class_id": 2,
+      "canonical_name": "bag",
+      "source_labels": [
+        "bag"
+      ]
+    },
+    {
+      "class_id": 3,
+      "canonical_name": "bed",
+      "source_labels": [
+        "bed"
+      ]
+    },
+    {
+      "class_id": 4,
+      "canonical_name": "belt",
+      "source_labels": [
+        "belt"
+      ]
+    },
+    {
+      "class_id": 5,
+      "canonical_name": "bicycle",
+      "source_labels": [
+        "bicycle"
+      ]
+    },
+    {
+      "class_id": 6,
+      "canonical_name": "bike",
+      "source_labels": [
+        "bike"
+      ]
+    },
+    {
+      "class_id": 7,
+      "canonical_name": "boat",
+      "source_labels": [
+        "boat"
+      ]
+    },
+    {
+      "class_id": 8,
+      "canonical_name": "book",
+      "source_labels": [
+        "book"
+      ]
+    },
+    {
+      "class_id": 9,
+      "canonical_name": "boots",
+      "source_labels": [
+        "boots"
+      ]
+    },
+    {
+      "class_id": 10,
+      "canonical_name": "bottle",
+      "source_labels": [
+        "bottle"
+      ]
+    },
+    {
+      "class_id": 11,
+      "canonical_name": "bowl",
+      "source_labels": [
+        "bowl"
+      ]
+    },
+    {
+      "class_id": 12,
+      "canonical_name": "boy",
+      "source_labels": [
+        "boy"
+      ]
+    },
+    {
+      "class_id": 13,
+      "canonical_name": "bus",
+      "source_labels": [
+        "bus"
+      ]
+    },
+    {
+      "class_id": 14,
+      "canonical_name": "cabinet",
+      "source_labels": [
+        "cabinet"
+      ]
+    },
+    {
+      "class_id": 15,
+      "canonical_name": "camera",
+      "source_labels": [
+        "camera"
+      ]
+    },
+    {
+      "class_id": 16,
+      "canonical_name": "car",
+      "source_labels": [
+        "car"
+      ]
+    },
+    {
+      "class_id": 17,
+      "canonical_name": "cell phone",
+      "source_labels": [
+        "cell phone"
+      ]
+    },
+    {
+      "class_id": 18,
+      "canonical_name": "chair",
+      "source_labels": [
+        "chair"
+      ]
+    },
+    {
+      "class_id": 19,
+      "canonical_name": "child",
+      "source_labels": [
+        "child"
+      ]
+    },
+    {
+      "class_id": 20,
+      "canonical_name": "clock",
+      "source_labels": [
+        "clock"
+      ]
+    },
+    {
+      "class_id": 21,
+      "canonical_name": "coat",
+      "source_labels": [
+        "coat"
+      ]
+    },
+    {
+      "class_id": 22,
+      "canonical_name": "computer",
+      "source_labels": [
+        "computer"
+      ]
+    },
+    {
+      "class_id": 23,
+      "canonical_name": "couch",
+      "source_labels": [
+        "couch"
+      ]
+    },
+    {
+      "class_id": 24,
+      "canonical_name": "cup",
+      "source_labels": [
+        "cup"
+      ]
+    },
+    {
+      "class_id": 25,
+      "canonical_name": "desk",
+      "source_labels": [
+        "desk"
+      ]
+    },
+    {
+      "class_id": 26,
+      "canonical_name": "door",
+      "source_labels": [
+        "door"
+      ]
+    },
+    {
+      "class_id": 27,
+      "canonical_name": "doors",
+      "source_labels": [
+        "doors"
+      ]
+    },
+    {
+      "class_id": 28,
+      "canonical_name": "dress",
+      "source_labels": [
+        "dress"
+      ]
+    },
+    {
+      "class_id": 29,
+      "canonical_name": "fork",
+      "source_labels": [
+        "fork"
+      ]
+    },
+    {
+      "class_id": 30,
+      "canonical_name": "girl",
+      "source_labels": [
+        "girl"
+      ]
+    },
+    {
+      "class_id": 31,
+      "canonical_name": "glasses",
+      "source_labels": [
+        "glasses"
+      ]
+    },
+    {
+      "class_id": 32,
+      "canonical_name": "hat",
+      "source_labels": [
+        "hat"
+      ]
+    },
+    {
+      "class_id": 33,
+      "canonical_name": "helmet",
+      "source_labels": [
+        "helmet"
+      ]
+    },
+    {
+      "class_id": 34,
+      "canonical_name": "jacket",
+      "source_labels": [
+        "jacket"
+      ]
+    },
+    {
+      "class_id": 35,
+      "canonical_name": "jeans",
+      "source_labels": [
+        "jeans"
+      ]
+    },
+    {
+      "class_id": 36,
+      "canonical_name": "keyboard",
+      "source_labels": [
+        "keyboard"
+      ]
+    },
+    {
+      "class_id": 37,
+      "canonical_name": "knife",
+      "source_labels": [
+        "knife"
+      ]
+    },
+    {
+      "class_id": 38,
+      "canonical_name": "laptop",
+      "source_labels": [
+        "laptop"
+      ]
+    },
+    {
+      "class_id": 39,
+      "canonical_name": "man",
+      "source_labels": [
+        "man"
+      ]
+    },
+    {
+      "class_id": 40,
+      "canonical_name": "mouse",
+      "source_labels": [
+        "mouse"
+      ]
+    },
+    {
+      "class_id": 41,
+      "canonical_name": "pants",
+      "source_labels": [
+        "pants"
+      ]
+    },
+    {
+      "class_id": 42,
+      "canonical_name": "paper",
+      "source_labels": [
+        "paper"
+      ]
+    },
+    {
+      "class_id": 43,
+      "canonical_name": "people",
+      "source_labels": [
+        "people"
+      ]
+    },
+    {
+      "class_id": 44,
+      "canonical_name": "person",
+      "source_labels": [
+        "person"
+      ]
+    },
+    {
+      "class_id": 45,
+      "canonical_name": "phone",
+      "source_labels": [
+        "phone"
+      ]
+    },
+    {
+      "class_id": 46,
+      "canonical_name": "plate",
+      "source_labels": [
+        "plate"
+      ]
+    },
+    {
+      "class_id": 47,
+      "canonical_name": "pot",
+      "source_labels": [
+        "pot"
+      ]
+    },
+    {
+      "class_id": 48,
+      "canonical_name": "purse",
+      "source_labels": [
+        "purse"
+      ]
+    },
+    {
+      "class_id": 49,
+      "canonical_name": "ramp",
+      "source_labels": [
+        "ramp"
+      ]
+    },
+    {
+      "class_id": 50,
+      "canonical_name": "scarf",
+      "source_labels": [
+        "scarf"
+      ]
+    },
+    {
+      "class_id": 51,
+      "canonical_name": "screen",
+      "source_labels": [
+        "screen"
+      ]
+    },
+    {
+      "class_id": 52,
+      "canonical_name": "shirt",
+      "source_labels": [
+        "shirt"
+      ]
+    },
+    {
+      "class_id": 53,
+      "canonical_name": "shoe",
+      "source_labels": [
+        "shoe"
+      ]
+    },
+    {
+      "class_id": 54,
+      "canonical_name": "shoes",
+      "source_labels": [
+        "shoes"
+      ]
+    },
+    {
+      "class_id": 55,
+      "canonical_name": "shorts",
+      "source_labels": [
+        "shorts"
+      ]
+    },
+    {
+      "class_id": 56,
+      "canonical_name": "sink",
+      "source_labels": [
+        "sink"
+      ]
+    },
+    {
+      "class_id": 57,
+      "canonical_name": "socks",
+      "source_labels": [
+        "socks"
+      ]
+    },
+    {
+      "class_id": 58,
+      "canonical_name": "spoon",
+      "source_labels": [
+        "spoon"
+      ]
+    },
+    {
+      "class_id": 59,
+      "canonical_name": "stairs",
+      "source_labels": [
+        "stairs"
+      ]
+    },
+    {
+      "class_id": 60,
+      "canonical_name": "stove",
+      "source_labels": [
+        "stove"
+      ]
+    },
+    {
+      "class_id": 61,
+      "canonical_name": "sunglasses",
+      "source_labels": [
+        "sunglasses"
+      ]
+    },
+    {
+      "class_id": 62,
+      "canonical_name": "table",
+      "source_labels": [
+        "table"
+      ]
+    },
+    {
+      "class_id": 63,
+      "canonical_name": "tie",
+      "source_labels": [
+        "tie"
+      ]
+    },
+    {
+      "class_id": 64,
+      "canonical_name": "toilet",
+      "source_labels": [
+        "toilet"
+      ]
+    },
+    {
+      "class_id": 65,
+      "canonical_name": "train",
+      "source_labels": [
+        "train"
+      ]
+    },
+    {
+      "class_id": 66,
+      "canonical_name": "truck",
+      "source_labels": [
+        "truck"
+      ]
+    },
+    {
+      "class_id": 67,
+      "canonical_name": "uniform",
+      "source_labels": [
+        "uniform"
+      ]
+    },
+    {
+      "class_id": 68,
+      "canonical_name": "van",
+      "source_labels": [
+        "van"
+      ]
+    },
+    {
+      "class_id": 69,
+      "canonical_name": "vehicle",
+      "source_labels": [
+        "vehicle"
+      ]
+    },
+    {
+      "class_id": 70,
+      "canonical_name": "watch",
+      "source_labels": [
+        "watch"
+      ]
+    },
+    {
+      "class_id": 71,
+      "canonical_name": "window",
+      "source_labels": [
+        "window"
+      ]
+    },
+    {
+      "class_id": 72,
+      "canonical_name": "windows",
+      "source_labels": [
+        "windows"
+      ]
+    },
+    {
+      "class_id": 73,
+      "canonical_name": "woman",
+      "source_labels": [
+        "woman"
+      ]
+    }
+  ],
+  "observed_but_deferred_under_1000_images": [
+    {
+      "source_label": "mobile phone",
+      "object_instances": 23,
+      "images": 23
+    },
+    {
+      "source_label": "key",
+      "object_instances": 1961,
+      "images": 434
+    },
+    {
+      "source_label": "keys",
+      "object_instances": 554,
+      "images": 444
+    },
+    {
+      "source_label": "charger",
+      "object_instances": 115,
+      "images": 109
+    },
+    {
+      "source_label": "wheelchair",
+      "object_instances": 57,
+      "images": 55
+    },
+    {
+      "source_label": "cane",
+      "object_instances": 109,
+      "images": 99
+    },
+    {
+      "source_label": "crutch",
+      "object_instances": 8,
+      "images": 7
+    },
+    {
+      "source_label": "fire hydrant",
+      "object_instances": 840,
+      "images": 803
+    },
+    {
+      "source_label": "smoke",
+      "object_instances": 662,
+      "images": 538
+    },
+    {
+      "source_label": "gun",
+      "object_instances": 101,
+      "images": 95
+    },
+    {
+      "source_label": "television",
+      "object_instances": 949,
+      "images": 915
+    },
+    {
+      "source_label": "tv",
+      "object_instances": 864,
+      "images": 821
+    },
+    {
+      "source_label": "microwave",
+      "object_instances": 795,
+      "images": 752
+    },
+    {
+      "source_label": "oven",
+      "object_instances": 1006,
+      "images": 924
+    },
+    {
+      "source_label": "refrigerator",
+      "object_instances": 714,
+      "images": 678
+    },
+    {
+      "source_label": "fridge",
+      "object_instances": 631,
+      "images": 602
+    },
+    {
+      "source_label": "monitor",
+      "object_instances": 1229,
+      "images": 995
+    },
+    {
+      "source_label": "suitcase",
+      "object_instances": 1320,
+      "images": 818
+    },
+    {
+      "source_label": "pan",
+      "object_instances": 913,
+      "images": 735
+    },
+    {
+      "source_label": "pencil",
+      "object_instances": 150,
+      "images": 112
+    },
+    {
+      "source_label": "staircase",
+      "object_instances": 320,
+      "images": 308
+    },
+    {
+      "source_label": "traffic",
+      "object_instances": 359,
+      "images": 338
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/"
+}

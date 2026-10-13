@@ -1,0 +1,200 @@
+[
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/test/bedroom_scene_window.jpg",
+    "source": "bedroom_scene_window.jpg",
+    "source_frame_index": null,
+    "source_group": "image:bedroom_scene_window.jpg"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000002.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 2,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000009.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 9,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000017.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 17,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000024.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 24,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000031.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 31,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000038.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 38,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000046.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 46,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000053.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 53,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000060.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 60,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000067.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 67,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000075.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 75,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000082.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 82,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000089.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 89,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000096.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 96,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000104.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 104,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000111.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 111,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000118.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 118,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000125.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 125,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000133.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 133,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/train/pinterest-video_frame_000140.jpg",
+    "source": "indoor_objects_video.mp4",
+    "source_frame_index": 140,
+    "source_group": "video:indoor_objects_video.mp4"
+  },
+  {
+    "annotation_status": "needs_manual_annotation",
+    "expected_classes_basis": "No verified source annotation metadata; annotator must inspect.",
+    "expected_useful_classes": [],
+    "image_path": "images/val/bedroom_scene_desk.jpg",
+    "source": "bedroom_scene_desk.jpg",
+    "source_frame_index": null,
+    "source_group": "image:bedroom_scene_desk.jpg"
+  }
+]

@@ -1,0 +1,319 @@
+{
+  "actual_image_counts": {
+    "test": 1,
+    "train": 20,
+    "val": 1
+  },
+  "actual_image_percentages": {
+    "test": 4.545454545454546,
+    "train": 90.9090909090909,
+    "val": 4.545454545454546
+  },
+  "class_distribution": {
+    "test": {
+      "bag": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "book": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "bottle": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "chair": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "laptop": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "mobile_phone": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "person": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "table": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      }
+    },
+    "train": {
+      "bag": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "book": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "bottle": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "chair": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "laptop": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "mobile_phone": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "person": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "table": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      }
+    },
+    "val": {
+      "bag": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "book": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "bottle": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "chair": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "laptop": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "mobile_phone": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "person": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      },
+      "table": {
+        "box_percentage": null,
+        "boxes": 0,
+        "image_percentage": null,
+        "images": 0
+      }
+    }
+  },
+  "grouping_policy": "All sampled frames from indoor_objects_video.mp4 stay in one split; each still image is its own group.",
+  "images": [
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/test/bedroom_scene_window.jpg",
+      "source_group": "image:bedroom_scene_window.jpg"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000002.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000009.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000017.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000024.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000031.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000038.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000046.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000053.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000060.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000067.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000075.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000082.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000089.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000096.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000104.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000111.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000118.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000125.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000133.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/train/pinterest-video_frame_000140.jpg",
+      "source_group": "video:indoor_objects_video.mp4"
+    },
+    {
+      "annotation_status": "needs_manual_annotation",
+      "image_path": "images/val/bedroom_scene_desk.jpg",
+      "source_group": "image:bedroom_scene_desk.jpg"
+    }
+  ],
+  "note": "Candidate images are unannotated and are not training-ready samples.",
+  "seed": 39,
+  "source_groups": {
+    "image:bedroom_scene_desk.jpg": "val",
+    "image:bedroom_scene_window.jpg": "test",
+    "video:indoor_objects_video.mp4": "train"
+  },
+  "splits": {
+    "test": [
+      "images/test/bedroom_scene_window.jpg"
+    ],
+    "train": [
+      "images/train/pinterest-video_frame_000002.jpg",
+      "images/train/pinterest-video_frame_000009.jpg",
+      "images/train/pinterest-video_frame_000017.jpg",
+      "images/train/pinterest-video_frame_000024.jpg",
+      "images/train/pinterest-video_frame_000031.jpg",
+      "images/train/pinterest-video_frame_000038.jpg",
+      "images/train/pinterest-video_frame_000046.jpg",
+      "images/train/pinterest-video_frame_000053.jpg",
+      "images/train/pinterest-video_frame_000060.jpg",
+      "images/train/pinterest-video_frame_000067.jpg",
+      "images/train/pinterest-video_frame_000075.jpg",
+      "images/train/pinterest-video_frame_000082.jpg",
+      "images/train/pinterest-video_frame_000089.jpg",
+      "images/train/pinterest-video_frame_000096.jpg",
+      "images/train/pinterest-video_frame_000104.jpg",
+      "images/train/pinterest-video_frame_000111.jpg",
+      "images/train/pinterest-video_frame_000118.jpg",
+      "images/train/pinterest-video_frame_000125.jpg",
+      "images/train/pinterest-video_frame_000133.jpg",
+      "images/train/pinterest-video_frame_000140.jpg"
+    ],
+    "val": [
+      "images/val/bedroom_scene_desk.jpg"
+    ]
+  },
+  "target_ratios": {
+    "test": 0.1,
+    "train": 0.7,
+    "val": 0.2
+  }
+}

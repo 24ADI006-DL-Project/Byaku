@@ -1,0 +1,87 @@
+{
+  "source_dataset": "Open Images V7",
+  "target_classes": [
+    {
+      "target_id": 0,
+      "name": "person",
+      "mid": "/m/01g317",
+      "training_id": 0,
+      "trainable": true,
+      "valid_box_count": 519,
+      "annotated_image_count": 219
+    },
+    {
+      "target_id": 1,
+      "name": "bottle",
+      "mid": "/m/04dr76w",
+      "training_id": 1,
+      "trainable": true,
+      "valid_box_count": 245,
+      "annotated_image_count": 89
+    },
+    {
+      "target_id": 2,
+      "name": "book",
+      "mid": "/m/0bt_c3",
+      "training_id": 2,
+      "trainable": true,
+      "valid_box_count": 570,
+      "annotated_image_count": 87
+    },
+    {
+      "target_id": 3,
+      "name": "chair",
+      "mid": "/m/01mzpv",
+      "training_id": 3,
+      "trainable": true,
+      "valid_box_count": 337,
+      "annotated_image_count": 113
+    },
+    {
+      "target_id": 4,
+      "name": "table",
+      "mid": "/m/04bcr3",
+      "training_id": 4,
+      "trainable": true,
+      "valid_box_count": 277,
+      "annotated_image_count": 144
+    },
+    {
+      "target_id": 5,
+      "name": "mobile_phone",
+      "mid": "/m/050k8",
+      "training_id": 5,
+      "trainable": true,
+      "valid_box_count": 112,
+      "annotated_image_count": 88
+    },
+    {
+      "target_id": 6,
+      "name": "laptop",
+      "mid": "/m/01c648",
+      "training_id": 6,
+      "trainable": true,
+      "valid_box_count": 107,
+      "annotated_image_count": 87
+    },
+    {
+      "target_id": 7,
+      "name": "bag",
+      "mid": "/m/0n5v01m",
+      "training_id": null,
+      "trainable": false,
+      "valid_box_count": 0,
+      "annotated_image_count": 0
+    }
+  ],
+  "training_names": {
+    "0": "person",
+    "1": "bottle",
+    "2": "book",
+    "3": "chair",
+    "4": "table",
+    "5": "mobile_phone",
+    "6": "laptop"
+  },
+  "bag_status": "unsupported: zero valid Open Images V7 bounding boxes"
+}

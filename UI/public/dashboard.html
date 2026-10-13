@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5effa">
+  <meta name="description" content="Explore the camera, detection, depth, spatial reasoning, and voice workflow behind BYAKU.">
+  <title>BYAKU | Project Workflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/byaku_interface.css">
+  <link rel="stylesheet" href="/css/dashboard-redesign-theme.css">
+  <script src="/js/frontend_config.js" defer></script>
+  <script src="/js/camera_preview.js" defer></script>
+  <script src="/js/browser_websocket_client.js" defer></script>
+  <script src="/js/workflow_dashboard.js" defer></script>
+</head>
+<body class="dashboard-page byaku-dashboard">
+  <div class="page-wash" aria-hidden="true"></div>
+  <aside class="dashboard-sidebar">
+    <a class="brand dashboard-brand" href="/" aria-label="BYAKU home"><span class="brand-mark brand-eye" aria-hidden="true"><span></span><i></i></span><span class="brand-copy"><strong data-app-name>BYAKU</strong><small>Project workflow</small></span></a>
+    <button class="workflow-menu-toggle" id="workflow-menu-toggle" type="button" aria-expanded="false" aria-controls="workflow-navigation" aria-label="Open project navigation"><span></span><span></span></button>
+    <p class="nav-caption">WORKSPACE</p>
+    <nav class="dashboard-nav" id="workflow-navigation" aria-label="Dashboard sections">
+      <a class="nav-item is-current" href="#overview"><span class="nav-symbol">⌂</span>Overview</a>
+      <a class="nav-item" href="#live-view"><span class="nav-symbol">◎</span>Live View</a>
+      <a class="nav-item" href="#detection"><span class="nav-symbol">⌗</span>Detection</a>
+      <a class="nav-item" href="#human-review"><span class="nav-symbol">✓</span>Human Review</a>
+      <a class="nav-item" href="#tracking"><span class="nav-symbol">↗</span>Tracking</a>
+      <a class="nav-item" href="#depth"><span class="nav-symbol">◌</span>Depth</a>
+      <a class="nav-item" href="#spatial"><span class="nav-symbol">⊙</span>Spatial Analysis</a>
+      <a class="nav-item" href="#scene-graph"><span class="nav-symbol">⌘</span>Scene Graph</a>
+      <a class="nav-item" href="#query"><span class="nav-symbol">⌕</span>Query</a>
+      <a class="nav-item" href="#events"><span class="nav-symbol">◷</span>Events</a>
+      <a class="nav-item" href="#settings"><span class="nav-symbol">⚙</span>Settings</a>
+    </nav>
+    <div class="dashboard-sidebar-status"><span class="status-dot status-dot-muted" aria-hidden="true"></span><span><strong>Backend connecting</strong><small>Live status check</small></span></div>
+    <a class="dashboard-return" href="/">← Return to BYAKU</a>
+  </aside>
+
+  <main class="dashboard-main" id="overview">
+    <header class="dashboard-header">
+      <div><p class="eyebrow"><span class="eyebrow-line"></span> PROJECT WORKFLOW</p><h1>How BYAKU understands a scene</h1><p class="dashboard-intro">Explore the live camera-to-scene pipeline and the data produced at each step.</p></div>
+      <div class="dashboard-head-status"><span class="connection-pill"><span class="status-dot" aria-hidden="true"></span><span>Checking backend status</span></span><a class="icon-link" href="/" aria-label="Return to assistant home" title="Assistant home"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z"/></svg></a></div>
+    </header>
+
+    <section class="pipeline-panel glass-panel" aria-labelledby="pipeline-title">
+      <div class="panel-heading"><div><p class="section-kicker">END-TO-END FLOW</p><h2 id="pipeline-title">Processing pipeline</h2></div><span class="backend-state"><span class="status-dot status-dot-muted" aria-hidden="true"></span>No live module status</span></div>
+      <ol class="pipeline-track" aria-label="Camera input, YOLO object detection, ByteTrack tracking, Depth Anything V2, spatial reasoning, scene graph, query reasoning, scene description and narration, and human review and correction memory">
+        <li data-module="camera"><span class="pipeline-node"><i>01</i>Camera Input</span></li><li data-module="detection"><span class="pipeline-node"><i>02</i>YOLO Object Detection</span></li><li data-module="tracking"><span class="pipeline-node"><i>03</i>ByteTrack Tracking</span></li><li data-module="depth"><span class="pipeline-node"><i>04</i>Depth Anything V2</span></li><li data-module="spatial"><span class="pipeline-node"><i>05</i>Spatial Reasoning</span></li><li data-module="scene"><span class="pipeline-node"><i>06</i>Scene Graph</span></li><li data-module="reasoning"><span class="pipeline-node"><i>07</i>Query Reasoning</span></li><li data-module="narration"><span class="pipeline-node"><i>08</i>Scene Description & Narration</span></li><li data-module="review"><span class="pipeline-node"><i>09</i>Human Review & Correction Memory</span></li>
+      </ol>
+      <details class="pipeline-explanations" id="pipeline-explanations">
+        <summary>How each stage works</summary>
+        <ol>
+          <li><strong>Camera Input</strong><span>The browser captures frames only after you start the live assistant or demonstration.</span></li>
+          <li><strong>YOLO Object Detection</strong><span>The configured detector proposes visible object classes and bounding boxes.</span></li>
+          <li><strong>ByteTrack Tracking</strong><span>Tracking associates detections across processed frames when IDs are available.</span></li>
+          <li><strong>Depth Anything V2</strong><span>The depth model estimates relative near/far values, not metric distance.</span></li>
+          <li><strong>Spatial reasoning</strong><span>Object positions and relationships are derived from the current detections and depth output.</span></li>
+          <li><strong>Scene graph</strong><span>Current objects and supported relationships are represented as nodes and edges.</span></li>
+          <li><strong>Query reasoning</strong><span>This stage runs for a user question; a camera frame alone does not make it ready.</span></li>
+          <li><strong>Scene description and narration</strong><span>The backend prepares scene text. The assistant page uses browser speech; this dashboard cannot confirm playback.</span></li>
+          <li><strong>Human review and correction memory</strong><span>Review decisions are saved for audit and correction memory; they are not used to retrain the model.</span></li>
+        </ol>
+      </details>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dash-card live-card glass-panel" id="live-view">
+        <div class="panel-heading"><div><p class="section-kicker">CAMERA</p><h2>Live View</h2></div><span class="camera-status" id="dash-camera-status"><span class="status-dot status-dot-muted" aria-hidden="true"></span>Camera Ready</span></div>
+        <div class="dashboard-camera camera-view" id="dash-camera-view"><video id="dash-camera-video" autoplay muted playsinline aria-label="Dashboard live camera preview"></video><canvas class="camera-overlay" id="dash-camera-overlay" aria-hidden="true"></canvas><div class="camera-placeholder" id="dash-camera-placeholder"><span class="camera-placeholder-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 10h5l2-3h8l2 3h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2Z"/><circle cx="16" cy="17" r="5"/></svg></span><span>Camera not connected</span><small>Start a local preview to check the camera.</small></div><span class="camera-corner corner-tl" aria-hidden="true"></span><span class="camera-corner corner-tr" aria-hidden="true"></span><span class="camera-corner corner-bl" aria-hidden="true"></span><span class="camera-corner corner-br" aria-hidden="true"></span></div>
+        <div class="live-card-footer"><span id="dash-camera-detail">Camera is off · no frame received</span><button class="text-button" id="dash-camera-toggle" type="button">Run Live Demonstration</button></div>
+        <p class="subtle-note">Starting the demonstration requests camera access and sends live frames to the existing backend. A retained frame is shown separately from current camera connectivity.</p>
+      </article>
+
+      <article class="dash-card system-card glass-panel" id="settings">
+        <div class="panel-heading"><div><p class="section-kicker">RUNTIME</p><h2>System status</h2></div><span class="state-chip state-chip-muted"><span class="state-dot" aria-hidden="true"></span>Offline</span></div>
+        <dl class="system-list"><div><dt>Camera connection</dt><dd id="system-camera">Disconnected</dd></div><div><dt>Last frame</dt><dd id="system-last-frame">None available</dd></div><div><dt>Detection</dt><dd id="system-detection">Unavailable</dd></div><div><dt>Tracking</dt><dd id="system-tracking">Unavailable</dd></div><div><dt>Depth</dt><dd id="system-depth">Unavailable</dd></div><div><dt>Server TTS</dt><dd id="system-tts">Unavailable</dd></div><div><dt>Browser speech API</dt><dd id="system-browser-speech">Not checked</dd></div><div><dt>Per-frame processing</dt><dd id="system-latency">—</dd></div><div><dt>Cold-start initialization</dt><dd id="system-initialization">—</dd></div><div><dt>Timing source</dt><dd id="system-timing-source">—</dd></div></dl>
+        <p class="subtle-note">Server TTS is unavailable. Browser speech status indicates API support only, not successful playback.</p>
+      </article>
+
+      <article class="dash-card table-card glass-panel" id="detection"><div class="panel-heading"><div><p class="section-kicker">OBJECTS</p><h2>Detection & tracking</h2></div><span class="count-badge" id="detection-count">0 objects</span></div><div class="table-wrap"><table><thead><tr><th scope="col">Object</th><th scope="col">Track ID</th><th scope="col">Confidence</th><th scope="col">Bounding box</th></tr></thead><tbody id="detection-rows"><tr class="empty-row"><td colspan="4">No detections received</td></tr></tbody></table></div><div class="tracking-footnote" id="tracking">Tracking data is waiting for the backend.</div></article>
+
+      <article class="dash-card review-card glass-panel" id="human-review" aria-labelledby="human-review-title">
+        <div class="panel-heading"><div><p class="section-kicker">HUMAN-IN-THE-LOOP</p><h2 id="human-review-title">Human Review</h2></div><span class="data-tag" id="review-frame-label">Waiting for a live frame</span></div>
+        <p class="review-intro">Review the current camera detections. Accept correct results, skip for later, or save a correction. Feedback is collected for review; it does not retrain the model.</p>
+        <div class="review-layout">
+          <div>
+            <div class="review-frame-wrap"><canvas id="review-frame-canvas" aria-label="Latest actual camera frame with detection boxes and labels"></canvas><p id="review-frame-empty">Start the live camera preview to display its latest processed frame.</p></div>
+            <ul class="review-detection-list" id="review-detection-list" aria-label="Select a detection to review"><li class="review-empty">No current detections</li></ul>
+          </div>
+          <div class="review-form">
+            <p class="review-selected" id="review-selected">Select a detection from the list or frame.</p>
+            <p class="review-question" id="review-question">Is this object detection correct?</p>
+            <div class="review-actions" id="review-answer-controls">
+              <button class="review-primary" id="review-confirm" type="button" disabled>Yes — Correct</button>
+              <button class="review-secondary" id="review-incorrect" type="button" disabled>No — Incorrect</button>
+            </div>
+            <form id="review-correction-form" class="review-correction-form" hidden>
+              <p class="review-prediction">Model prediction: <strong id="review-predicted-name">—</strong></p>
+              <label for="review-corrected-label">What is the correct name of this object?</label>
+              <input id="review-corrected-label" name="corrected_label" type="text" list="review-known-classes" maxlength="80" autocomplete="off" placeholder="Search known names or enter a new name" required>
+              <datalist id="review-known-classes"></datalist>
+              <div class="review-actions"><button class="review-primary" id="review-save" type="submit">Save Correction</button><button class="text-button" id="review-cancel" type="button">Cancel</button></div>
+            </form>
+            <p class="review-feedback-status" id="review-feedback-status" role="status" aria-live="polite">Select one detection to review it.</p>
+            <div class="review-history-head"><h3>Review history</h3><button class="text-button" id="review-history-refresh" type="button">Refresh history</button></div>
+            <ol class="review-history" id="review-history" aria-live="polite"><li>No saved review actions.</li></ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="dash-card depth-card glass-panel" id="depth"><div class="panel-heading"><div><p class="section-kicker">RELATIVE DEPTH</p><h2>Depth map</h2></div><span class="data-tag" id="depth-status">No depth frame</span></div><div class="depth-empty"><div class="depth-surface" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><img class="depth-preview" id="depth-preview" alt="Latest relative depth map" hidden><p id="depth-message">Depth output will appear here</p><small>Per-frame relative values only · higher values indicate nearer objects, not metric distance</small></div><div class="depth-scale"><span><i class="scale-far"></i>Lower · farther</span><span><i class="scale-near"></i>Higher · nearer</span></div><details class="stage-explainer"><summary>What this means</summary><p>The map is recomputed from a processed frame. Its values are relative within that frame and must not be read as physical distance.</p></details></article>
+
+      <article class="dash-card spatial-card glass-panel" id="spatial"><div class="panel-heading"><div><p class="section-kicker">POSITION & RELATIVE DEPTH</p><h2>Spatial understanding</h2></div><span class="data-tag">No scene data</span></div><div class="table-wrap"><table><thead><tr><th scope="col">Object</th><th scope="col">Position</th><th scope="col">Relative depth</th></tr></thead><tbody id="spatial-rows"><tr class="empty-row"><td colspan="3">No spatial objects received</td></tr></tbody></table></div><p class="spatial-note">Normalized per frame (0–1); higher values indicate nearer objects. Not a metric distance.</p></article>
+
+      <article class="dash-card graph-card glass-panel" id="scene-graph"><div class="panel-heading"><div><p class="section-kicker">RELATIONSHIPS</p><h2>Scene graph</h2></div><span class="data-tag">Waiting for scene</span></div><div class="scene-graph-wrap"><svg class="scene-graph-svg" id="scene-graph-svg" viewBox="0 0 600 240" role="group" aria-label="Interactive scene graph built from the latest processed frame"></svg><p class="scene-graph-empty" id="scene-graph-empty">Start a live demonstration to see actual scene objects and supported relationships.</p></div><p class="graph-selection" id="graph-selection" aria-live="polite">Select an object node to inspect its available attributes.</p><ul class="graph-relationships" id="graph-relationships"></ul><details class="stage-explainer"><summary>How to read the graph</summary><p>Each node comes from an actual scene-graph object. Lines represent relationships returned by the backend; no relationship is inferred by this display.</p></details></article>
+
+      <article class="dash-card query-card glass-panel" id="query"><div class="panel-heading"><div><p class="section-kicker">VOICE ASSISTANCE</p><h2>Latest query</h2></div><span class="data-tag">No query received</span></div><div class="query-empty"><span class="query-mic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/></svg></span><div><strong>Waiting for a question</strong><p>Question, matched object, image position, relative depth, and spoken response will appear here.</p></div></div><dl class="query-result-list"><div><dt>Object</dt><dd>—</dd></div><div><dt>Position</dt><dd>—</dd></div><div><dt>Relative depth</dt><dd>—</dd></div></dl></article>
+
+      <article class="dash-card narration-card glass-panel" id="narration-output"><div class="panel-heading"><div><p class="section-kicker">LATEST LIVE SCENE</p><h2>Generated narration</h2></div><span class="data-tag" id="narration-status">Waiting for scene</span></div><p class="narration-output" id="narration-text">A fresh narration appears after a live frame is processed.</p><p class="subtle-note">This is generated text only. The backend does not report whether the browser played speech.</p></article>
+
+      <article class="dash-card events-card glass-panel" id="events"><div class="panel-heading"><div><p class="section-kicker">PRIORITY UPDATES</p><h2>Recent events</h2></div><span class="data-tag">No events</span></div><div class="events-empty"><span class="events-check" aria-hidden="true">✓</span><div><strong>Nothing to report</strong><p>Important scene events will be listed here.</p></div></div><ul class="event-list" id="event-list" aria-live="polite"></ul></article>
+    </section>
+    <footer class="dashboard-footer"><span>BYAKU · Technical view</span><a href="/">Open product home <span aria-hidden="true">↗</span></a></footer>
+  </main>
+</body>
+</html>
