@@ -148,6 +148,7 @@ def test_detection_schema_preserves_class_confidence_box_and_thresholds() -> Non
     assert kwargs == {
         "conf": 0.31,
         "iou": 0.62,
+        "imgsz": 640,
         "persist": True,
         "tracker": "bytetrack.yaml",
         "verbose": False,

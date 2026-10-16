@@ -8,6 +8,26 @@ import numpy as np
 
 _FRAME_ID_COUNTER = count(1)
 DEFAULT_DEPTH_DIFFERENCE_THRESHOLD = 0.05
+DEPTH_CATEGORY_MID_THRESHOLD = 1 / 3
+DEPTH_CATEGORY_NEAR_THRESHOLD = 2 / 3
+DEPTH_CATEGORIES = frozenset({"NEAR", "MID-RANGE", "FAR", "UNKNOWN"})
+
+
+def relative_depth_category(value: Any) -> str:
+    """Map a normalized higher-is-nearer depth value to a coarse category."""
+    if isinstance(value, bool) or value is None:
+        return "UNKNOWN"
+    try:
+        depth = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return "UNKNOWN"
+    if not np.isfinite(depth) or not 0 <= depth <= 1:
+        return "UNKNOWN"
+    if depth >= DEPTH_CATEGORY_NEAR_THRESHOLD:
+        return "NEAR"
+    if depth >= DEPTH_CATEGORY_MID_THRESHOLD:
+        return "MID-RANGE"
+    return "FAR"
 
 
 def image_shape_from_frame_size(frame_size: Mapping[str, Any]) -> tuple[int, int]:
@@ -127,7 +147,7 @@ def calculate_spatial_relationships(
     depth_map: Any = None,
     *,
     frame_id: str | int | None = None,
-    center_zone_fraction: float = 0.2,
+    center_zone_fraction: float = 1 / 6,
     overlap_threshold: float = 0.1,
     depth_difference_threshold: float = DEFAULT_DEPTH_DIFFERENCE_THRESHOLD,
     higher_depth_is_nearer: bool = True,
@@ -230,6 +250,7 @@ def calculate_spatial_relationships(
             "horizontal_position": _horizontal_position(center_x, width, center_zone_fraction),
             "vertical_position": _vertical_position(center_y, height, center_zone_fraction),
             "relative_depth_value": object_depth,
+            "depth_category": relative_depth_category(object_depth),
         }
         if "confidence" in detection and detection["confidence"] is not None:
             confidence = detection["confidence"]

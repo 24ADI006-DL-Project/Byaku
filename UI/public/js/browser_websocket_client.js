@@ -1,5 +1,6 @@
 (() => {
   const STATE_SEQUENCE = ['idle', 'connecting', 'connected', 'streaming', 'paused', 'error'];
+  const SCAN_INTERVAL_MS = 5000;
 
   class BYAKUConnection extends EventTarget {
     constructor(url = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`) {
@@ -218,6 +219,7 @@
             this.keepAliveTimer = null;
             this.busy = false;
             this.pendingFrameId = null;
+            this.pendingFrameDataUrl = null;
             if (this.queryFrameId === Number(message.frame_id)) this.queryFrameId = null;
           }
         }
@@ -233,7 +235,8 @@
       this.connection.addEventListener('disconnected', this.onDisconnect);
       this.connection.send({ type: 'start_camera' });
       this.connection.setState('streaming');
-      this.timer = window.setInterval(() => this.capture(), 200);
+      this.timer = window.setInterval(() => this.capture(), SCAN_INTERVAL_MS);
+      void this.capture();
     }
 
     stop() {
@@ -307,21 +310,25 @@
           data: encodedFrame.split(',')[1],
         });
         this.capturing = false;
-
-        if (this.busy) {
-          if (this.pendingQuery && frameStartedAt >= this.pendingQueryRequestedAt) {
-            this.queryFrameId = frameId;
-          }
-          this.keepAliveTimer = window.setTimeout(() => {
-            if (this.busy && this.pendingFrameId === frameId) {
-              this.dispatchEvent(new CustomEvent('result', { detail: { type: 'error', stage: 'camera', frame_id: frameId, code: 'frame_slow', message: 'Live inference is still processing this frame. Waiting for its result; newer frames are paused to prevent a stale-frame backlog.', recoverable: true } }));
-            }
-          }, this.frameTimeoutMs);
+        if (!this.busy) {
+          this.pendingFrameId = null;
+          this.pendingFrameDataUrl = null;
+          return;
         }
+
+        if (this.pendingQuery && frameStartedAt >= this.pendingQueryRequestedAt) {
+          this.queryFrameId = frameId;
+        }
+        this.keepAliveTimer = window.setTimeout(() => {
+          if (this.busy && this.pendingFrameId === frameId) {
+            this.dispatchEvent(new CustomEvent('result', { detail: { type: 'error', stage: 'camera', frame_id: frameId, code: 'frame_slow', message: 'Live inference is still processing this frame. Waiting for its result; newer frames are paused to prevent a stale-frame backlog.', recoverable: true } }));
+          }
+        }, this.frameTimeoutMs);
       } catch (error) {
         this.capturing = false;
         this.busy = false;
         this.pendingFrameId = null;
+        this.pendingFrameDataUrl = null;
         this.dispatchEvent(new CustomEvent('result', { detail: { type: 'error', stage: 'camera', code: 'capture_failed', message: error.message || 'Camera frame capture failed.', recoverable: true } }));
       }
     }
@@ -358,13 +365,42 @@
         const boxHeight = (y2 - y1) * scale;
         if (boxWidth <= 0 || boxHeight <= 0) continue;
 
-        context.strokeStyle = '#d68af0';
+        const rawDepth = object.depth_category;
+        const relativeDepth = typeof object.relative_depth_value === 'number'
+          && Number.isFinite(object.relative_depth_value)
+          && object.relative_depth_value >= 0
+          && object.relative_depth_value <= 1
+          ? object.relative_depth_value
+          : null;
+        const depthCategory = ['NEAR', 'MID-RANGE', 'FAR'].includes(rawDepth)
+          ? rawDepth
+          : relativeDepth === null
+            ? 'UNKNOWN'
+            : relativeDepth >= 2 / 3
+              ? 'NEAR'
+              : relativeDepth >= 1 / 3
+                ? 'MID-RANGE'
+                : 'FAR';
+        const colors = {
+          NEAR: '#ef4444',
+          'MID-RANGE': '#facc15',
+          FAR: '#3b82f6',
+          UNKNOWN: '#d68af0',
+        };
+        context.strokeStyle = colors[depthCategory];
         context.strokeRect(left, top, boxWidth, boxHeight);
-        const relativeDepth = typeof object.relative_depth_value === 'number' && Number.isFinite(object.relative_depth_value)
-          ? `rel ${object.relative_depth_value.toFixed(2)}`
-          : '';
-        const label = [object.class_name || object.class, object.track_id != null ? `#${object.track_id}` : '', Number.isFinite(Number(object.confidence)) ? `${Math.round(Number(object.confidence) * 100)}%` : '', object.horizontal_position || object.position || '', relativeDepth]
-          .filter(Boolean).join(' ');
+        const trackId = object.track_id ?? (
+          typeof object.object_id === 'string' && object.object_id.startsWith('track:')
+            ? object.object_id.slice('track:'.length)
+            : null
+        );
+        const position = object.horizontal_position || object.position;
+        const label = [
+          object.class_name || object.class || 'Object',
+          trackId != null ? `ID ${trackId}` : 'ID unavailable',
+          typeof position === 'string' && position ? position.toUpperCase() : 'POSITION UNKNOWN',
+          depthCategory,
+        ].join(' | ');
         if (label) {
           const labelWidth = context.measureText(label).width + 12;
           const labelTop = Math.max(0, top - 22);

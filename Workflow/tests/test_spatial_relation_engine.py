@@ -5,6 +5,7 @@ from Workflow.reasoning.spatial_relation_engine import (
     bounding_box_iou,
     calculate_spatial_relationships,
     image_shape_from_frame_size,
+    relative_depth_category,
 )
 
 
@@ -60,6 +61,53 @@ def test_center_zone_classification_includes_boundaries() -> None:
 
     assert [item["horizontal_position"] for item in result["objects"]] == ["center", "center"]
     assert [item["vertical_position"] for item in result["objects"]] == ["middle", "middle"]
+
+
+def test_default_horizontal_regions_use_one_third_boundaries_including_right() -> None:
+    result = calculate_spatial_relationships(
+        [
+            make_detection([0, 45, 10, 55]),
+            make_detection([28, 45, 38, 55]),
+            make_detection([45, 45, 55, 55]),
+            make_detection([62, 45, 72, 55]),
+            make_detection([90, 45, 100, 55]),
+        ],
+        (100, 100),
+    )
+
+    assert [item["horizontal_position"] for item in result["objects"]] == [
+        "left",
+        "left",
+        "center",
+        "right",
+        "right",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        (0.0, "FAR"),
+        (1 / 3, "MID-RANGE"),
+        (0.5, "MID-RANGE"),
+        (2 / 3, "NEAR"),
+        (1.0, "NEAR"),
+        (None, "UNKNOWN"),
+        (float("nan"), "UNKNOWN"),
+        (1.1, "UNKNOWN"),
+    ],
+)
+def test_normalized_depth_categories(value, expected) -> None:
+    assert relative_depth_category(value) == expected
+
+
+def test_objects_include_depth_category_with_unknown_when_depth_is_missing() -> None:
+    result = calculate_spatial_relationships(
+        [make_detection([0, 0, 10, 10], track_id=4)],
+        (20, 20),
+    )
+
+    assert result["objects"][0]["depth_category"] == "UNKNOWN"
 
 
 def test_bounding_box_overlap_uses_configurable_iou_threshold() -> None:

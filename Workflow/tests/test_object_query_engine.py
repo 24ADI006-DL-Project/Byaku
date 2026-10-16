@@ -158,7 +158,8 @@ def test_last_seen_query_uses_scene_memory_frame_and_box() -> None:
 
     assert result["status"] == "missing"
     assert "frame 12" in result["answer"]
-    assert "(10.0, 20.0, 30.0, 40.0) pixels" in result["answer"]
+    assert "pixels" not in result["answer"]
+    assert result["evidence"]["object_state"]["bounding_box"] == (10.0, 20.0, 30.0, 40.0)
     assert result["evidence"]["object_state"]["last_seen_timestamp"] == 123.5
 
 

@@ -1,92 +1,607 @@
-[
-  {
-    "frame_id": "1",
-    "frame_number": 1,
-    "track_id": 7,
-    "original_prediction": {
-      "object_id": "track:7",
+{
+  "schema_version": 2,
+  "records": [
+    {
+      "frame_id": "1",
+      "frame_number": 1,
       "track_id": 7,
-      "class_name": "bottle",
-      "bounding_box": [
-        85.58116912841797,
-        208.75210571289062,
-        114.19376373291016,
-        261.64373779296875
-      ],
-      "center": [
-        99.88746643066406,
-        235.1979217529297
-      ],
-      "horizontal_position": "left",
-      "vertical_position": "above",
-      "relative_depth_value": 0.3331695795059204,
-      "confidence": 0.26313647627830505
+      "original_prediction": {
+        "object_id": "track:7",
+        "track_id": 7,
+        "class_name": "bottle",
+        "bounding_box": [
+          85.58116912841797,
+          208.75210571289062,
+          114.19376373291016,
+          261.64373779296875
+        ],
+        "center": [
+          99.88746643066406,
+          235.1979217529297
+        ],
+        "horizontal_position": "left",
+        "vertical_position": "above",
+        "relative_depth_value": 0.3331695795059204,
+        "confidence": 0.26313647627830505
+      },
+      "corrected_value": "false_positive",
+      "correction_type": "false_positive",
+      "review_status": "corrected",
+      "feedback_id": "02a96cce69fb44f09523db0502145c1d",
+      "created_at": "2026-10-11T15:28:09.845562+00:00",
+      "timestamp": "2026-10-11T15:28:09.845562+00:00"
     },
-    "corrected_value": "false_positive",
-    "correction_type": "false_positive",
-    "review_status": "corrected",
-    "feedback_id": "02a96cce69fb44f09523db0502145c1d",
-    "created_at": "2026-10-11T15:28:09.845562+00:00",
-    "timestamp": "2026-10-11T15:28:09.845562+00:00"
-  },
-  {
-    "frame_id": "51",
-    "frame_number": 14,
-    "track_id": 8,
-    "original_prediction": {
-      "object_id": "track:8",
+    {
+      "frame_id": "51",
+      "frame_number": 14,
       "track_id": 8,
-      "class_name": "person",
-      "bounding_box": [
-        94.99950408935547,
-        161.74319458007812,
-        598.1930541992188,
-        479.82342529296875
-      ],
-      "center": [
-        346.5962791442871,
-        320.78330993652344
-      ],
-      "horizontal_position": "center",
-      "vertical_position": "middle",
-      "relative_depth_value": 0.233902245759964,
-      "confidence": 0.8711985349655151
+      "original_prediction": {
+        "object_id": "track:8",
+        "track_id": 8,
+        "class_name": "person",
+        "bounding_box": [
+          94.99950408935547,
+          161.74319458007812,
+          598.1930541992188,
+          479.82342529296875
+        ],
+        "center": [
+          346.5962791442871,
+          320.78330993652344
+        ],
+        "horizontal_position": "center",
+        "vertical_position": "middle",
+        "relative_depth_value": 0.233902245759964,
+        "confidence": 0.8711985349655151
+      },
+      "corrected_value": "person",
+      "correction_type": "accept",
+      "review_status": "accepted",
+      "feedback_id": "68c158c800084634a240d30e763c7610",
+      "created_at": "2026-10-11T15:54:13.289676+00:00",
+      "timestamp": "2026-10-11T15:54:13.289676+00:00"
     },
-    "corrected_value": "person",
-    "correction_type": "accept",
-    "review_status": "accepted",
-    "feedback_id": "68c158c800084634a240d30e763c7610",
-    "created_at": "2026-10-11T15:54:13.289676+00:00",
-    "timestamp": "2026-10-11T15:54:13.289676+00:00"
-  },
-  {
-    "frame_id": "2",
-    "frame_number": 16,
-    "track_id": 10,
-    "original_prediction": {
-      "object_id": "track:10",
+    {
+      "frame_id": "2",
+      "frame_number": 16,
       "track_id": 10,
-      "class_name": "teddy bear",
-      "bounding_box": [
-        341.4762268066406,
-        122.27752685546875,
-        598.160400390625,
-        480
-      ],
-      "center": [
-        469.8183135986328,
-        301.1387634277344
-      ],
-      "horizontal_position": "right",
-      "vertical_position": "middle",
-      "relative_depth_value": 0.5893211364746094,
-      "confidence": 0.4330425262451172
+      "original_prediction": {
+        "object_id": "track:10",
+        "track_id": 10,
+        "class_name": "teddy bear",
+        "bounding_box": [
+          341.4762268066406,
+          122.27752685546875,
+          598.160400390625,
+          480
+        ],
+        "center": [
+          469.8183135986328,
+          301.1387634277344
+        ],
+        "horizontal_position": "right",
+        "vertical_position": "middle",
+        "relative_depth_value": 0.5893211364746094,
+        "confidence": 0.4330425262451172
+      },
+      "corrected_value": "teddy bear",
+      "correction_type": "accept",
+      "review_status": "accepted",
+      "feedback_id": "fef0172a85a0488da0376e1dee7e7e1f",
+      "created_at": "2026-10-11T15:54:30.999716+00:00",
+      "timestamp": "2026-10-11T15:54:30.999716+00:00"
     },
-    "corrected_value": "teddy bear",
-    "correction_type": "accept",
-    "review_status": "accepted",
-    "feedback_id": "fef0172a85a0488da0376e1dee7e7e1f",
-    "created_at": "2026-10-11T15:54:30.999716+00:00",
-    "timestamp": "2026-10-11T15:54:30.999716+00:00"
-  }
-]
+    {
+      "frame_id": "upload-video-58c4b524457f:frame-571",
+      "frame_number": 571,
+      "review_frame_token": "a12284950b7149c38936a0fa4f92acd1",
+      "session_id": "upload-video-58c4b524457f",
+      "source": "upload_video",
+      "detection_id": "upload-video-58c4b524457f:track:91",
+      "submission_id": "4365aacb448242bdb3c9f5b201a33c51",
+      "track_id": 91,
+      "original_prediction": {
+        "class_name": "person",
+        "confidence": 0.48509734869003296,
+        "horizontal_position": "center",
+        "depth_category": "FAR",
+        "bounding_box": [
+          375.11944580078125,
+          392.837158203125,
+          436.5923156738281,
+          510.35693359375
+        ]
+      },
+      "corrected_value": "banner",
+      "human_corrected_name": "banner",
+      "correction_type": "class_correction",
+      "review_status": "corrected",
+      "schema_version": 2,
+      "feedback_id": "338db960f0b545379182a428335d65d5",
+      "correction_id": "338db960f0b545379182a428335d65d5",
+      "created_at": "2026-10-16T05:33:21.703508+00:00",
+      "timestamp": "2026-10-16T05:33:21.703508+00:00",
+      "original_predicted_class": "person",
+      "original_confidence": 0.48509734869003296,
+      "image_dimensions": {
+        "width": 720,
+        "height": 1280
+      },
+      "frame_reference": {
+        "session_id": "upload-video-58c4b524457f",
+        "frame_id": "upload-video-58c4b524457f:frame-571",
+        "frame_number": 571,
+        "review_frame_token": "a12284950b7149c38936a0fa4f92acd1",
+        "source": "upload_video",
+        "detection_id": "upload-video-58c4b524457f:track:91"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": "256c0125dae4b7408cdf93c9d39aabb3e89642e415ca52256e92623a2345d5df"
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-31",
+      "frame_number": 31,
+      "review_frame_token": "86d9ced0db5049ebbb714ef5ae035bee",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:1",
+      "submission_id": "84832c7448154300a27d6e8ca176ad56",
+      "track_id": 1,
+      "original_prediction": {
+        "class_name": "couch",
+        "confidence": 0.7089061737060547,
+        "horizontal_position": "right",
+        "depth_category": "FAR",
+        "bounding_box": [
+          468.935302734375,
+          587.947265625,
+          720,
+          885.1058349609375
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "be8a7f035a8e47c3a92e0603c22ec509",
+      "correction_id": "be8a7f035a8e47c3a92e0603c22ec509",
+      "created_at": "2026-10-16T07:07:01.036880+00:00",
+      "timestamp": "2026-10-16T07:07:01.036880+00:00",
+      "original_predicted_class": "couch",
+      "original_confidence": 0.7089061737060547,
+      "image_dimensions": {
+        "width": 720,
+        "height": 1272
+      },
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-31",
+        "frame_number": 31,
+        "review_frame_token": "86d9ced0db5049ebbb714ef5ae035bee",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:1"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+      "frame_number": 1,
+      "review_frame_token": "41372be784ae475b9991583670a8a41f",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:4",
+      "submission_id": "6b77e47ed7214a289dd70110bb33885e",
+      "track_id": 4,
+      "original_prediction": {
+        "class_name": "airplane",
+        "confidence": 0.5406244397163391,
+        "horizontal_position": "center",
+        "depth_category": "FAR",
+        "bounding_box": [
+          265.70867919921875,
+          286.6290283203125,
+          401.0174560546875,
+          338.7586669921875
+        ]
+      },
+      "corrected_value": "fan",
+      "human_corrected_name": "fan",
+      "correction_type": "class_correction",
+      "review_status": "corrected",
+      "schema_version": 2,
+      "feedback_id": "56dcf75acabe40f2b5cd163ba0411079",
+      "correction_id": "56dcf75acabe40f2b5cd163ba0411079",
+      "created_at": "2026-10-16T07:08:07.480648+00:00",
+      "timestamp": "2026-10-16T07:08:07.480648+00:00",
+      "original_predicted_class": "airplane",
+      "original_confidence": 0.5406244397163391,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+        "frame_number": 1,
+        "review_frame_token": "41372be784ae475b9991583670a8a41f",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:4"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+      "frame_number": 1,
+      "review_frame_token": "41372be784ae475b9991583670a8a41f",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:3",
+      "submission_id": "4225b7a397c14ee9b66110a3bf3d70e2",
+      "track_id": 3,
+      "original_prediction": {
+        "class_name": "chair",
+        "confidence": 0.7148661017417908,
+        "horizontal_position": "left",
+        "depth_category": "FAR",
+        "bounding_box": [
+          173.72740173339844,
+          529.4904174804688,
+          242.15977478027344,
+          656.0391235351562
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "49abecf7480e45c497818d425650001d",
+      "correction_id": "49abecf7480e45c497818d425650001d",
+      "created_at": "2026-10-16T07:08:09.578058+00:00",
+      "timestamp": "2026-10-16T07:08:09.578058+00:00",
+      "original_predicted_class": "chair",
+      "original_confidence": 0.7148661017417908,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+        "frame_number": 1,
+        "review_frame_token": "41372be784ae475b9991583670a8a41f",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:3"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+      "frame_number": 1,
+      "review_frame_token": "41372be784ae475b9991583670a8a41f",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:2",
+      "submission_id": "cf9a2b7cf73d428c869699b41a0b61d3",
+      "track_id": 2,
+      "original_prediction": {
+        "class_name": "chair",
+        "confidence": 0.7426143884658813,
+        "horizontal_position": "center",
+        "depth_category": "FAR",
+        "bounding_box": [
+          247.4220733642578,
+          524.1683959960938,
+          325.78179931640625,
+          653.3568725585938
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "0a99be5a445445a7b05b7daecdad00ab",
+      "correction_id": "0a99be5a445445a7b05b7daecdad00ab",
+      "created_at": "2026-10-16T07:08:10.747297+00:00",
+      "timestamp": "2026-10-16T07:08:10.747297+00:00",
+      "original_predicted_class": "chair",
+      "original_confidence": 0.7426143884658813,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+        "frame_number": 1,
+        "review_frame_token": "41372be784ae475b9991583670a8a41f",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:2"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+      "frame_number": 1,
+      "review_frame_token": "41372be784ae475b9991583670a8a41f",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:1",
+      "submission_id": "86561ba0256a48b0bed01b7e7923500e",
+      "track_id": 1,
+      "original_prediction": {
+        "class_name": "couch",
+        "confidence": 0.8356781005859375,
+        "horizontal_position": "right",
+        "depth_category": "FAR",
+        "bounding_box": [
+          440.1300354003906,
+          562.0775146484375,
+          716.8670654296875,
+          809.5476684570312
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "42d462abd28d44358c878a7897f23d74",
+      "correction_id": "42d462abd28d44358c878a7897f23d74",
+      "created_at": "2026-10-16T07:08:11.957362+00:00",
+      "timestamp": "2026-10-16T07:08:11.957362+00:00",
+      "original_predicted_class": "couch",
+      "original_confidence": 0.8356781005859375,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+        "frame_number": 1,
+        "review_frame_token": "41372be784ae475b9991583670a8a41f",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:1"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+      "frame_number": 1,
+      "review_frame_token": "41372be784ae475b9991583670a8a41f",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:5",
+      "submission_id": "c6e139d26f2344b0a87a313d31fa03f1",
+      "track_id": 5,
+      "original_prediction": {
+        "class_name": "tv",
+        "confidence": 0.323106974363327,
+        "horizontal_position": "left",
+        "depth_category": "FAR",
+        "bounding_box": [
+          36.90126037597656,
+          425.2921142578125,
+          118.02899169921875,
+          538.6871337890625
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "fbb336792d6c4a81af21019615af4efe",
+      "correction_id": "fbb336792d6c4a81af21019615af4efe",
+      "created_at": "2026-10-16T07:08:13.941693+00:00",
+      "timestamp": "2026-10-16T07:08:13.941693+00:00",
+      "original_predicted_class": "tv",
+      "original_confidence": 0.323106974363327,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-1",
+        "frame_number": 1,
+        "review_frame_token": "41372be784ae475b9991583670a8a41f",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:5"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-61",
+      "frame_number": 61,
+      "review_frame_token": "bbd2794f127b40ce846b9f5b51af7e95",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:7",
+      "submission_id": "fb49a1ebef4d44689ef1c8fa6dbdca15",
+      "track_id": 7,
+      "original_prediction": {
+        "class_name": "chair",
+        "confidence": 0.6925620436668396,
+        "horizontal_position": "center",
+        "depth_category": "FAR",
+        "bounding_box": [
+          379.1806640625,
+          546.5704956054688,
+          458.53515625,
+          683.777587890625
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "d7c1a0ff466c404f813ae613a91c4c45",
+      "correction_id": "d7c1a0ff466c404f813ae613a91c4c45",
+      "created_at": "2026-10-16T07:08:16.755793+00:00",
+      "timestamp": "2026-10-16T07:08:16.755793+00:00",
+      "original_predicted_class": "chair",
+      "original_confidence": 0.6925620436668396,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-61",
+        "frame_number": 61,
+        "review_frame_token": "bbd2794f127b40ce846b9f5b51af7e95",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:7"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+      "frame_number": 91,
+      "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:2",
+      "submission_id": "cfa4e2f7302542d88d3e89bbf3f93db6",
+      "track_id": 2,
+      "original_prediction": {
+        "class_name": "chair",
+        "confidence": 0.6263282299041748,
+        "horizontal_position": "center",
+        "depth_category": "FAR",
+        "bounding_box": [
+          212.03407287597656,
+          521.982177734375,
+          302.04595947265625,
+          671.1076049804688
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "9030bfda46c8437ca36cb973df2c1d39",
+      "correction_id": "9030bfda46c8437ca36cb973df2c1d39",
+      "created_at": "2026-10-16T07:08:19.363497+00:00",
+      "timestamp": "2026-10-16T07:08:19.363497+00:00",
+      "original_predicted_class": "chair",
+      "original_confidence": 0.6263282299041748,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+        "frame_number": 91,
+        "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:2"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+      "frame_number": 91,
+      "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:3",
+      "submission_id": "a89b6e8a4d1e4cda93d31bf887d4d69f",
+      "track_id": 3,
+      "original_prediction": {
+        "class_name": "chair",
+        "confidence": 0.728141725063324,
+        "horizontal_position": "left",
+        "depth_category": "FAR",
+        "bounding_box": [
+          130.31793212890625,
+          519.80810546875,
+          212.0239715576172,
+          671.093994140625
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "891fcdd2ebb049a8a4620249045941e6",
+      "correction_id": "891fcdd2ebb049a8a4620249045941e6",
+      "created_at": "2026-10-16T07:08:20.653017+00:00",
+      "timestamp": "2026-10-16T07:08:20.653017+00:00",
+      "original_predicted_class": "chair",
+      "original_confidence": 0.728141725063324,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+        "frame_number": 91,
+        "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:3"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    },
+    {
+      "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+      "frame_number": 91,
+      "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+      "session_id": "upload-video-c3919ca7d2b8",
+      "source": "upload_video",
+      "detection_id": "upload-video-c3919ca7d2b8:track:1",
+      "submission_id": "9fdb4c0ca2c84533b01589c46b4e232e",
+      "track_id": 1,
+      "original_prediction": {
+        "class_name": "couch",
+        "confidence": 0.8634880185127258,
+        "horizontal_position": "right",
+        "depth_category": "FAR",
+        "bounding_box": [
+          348.4068908691406,
+          587.23486328125,
+          720,
+          1039.5869140625
+        ]
+      },
+      "corrected_value": null,
+      "human_corrected_name": null,
+      "correction_type": "confirm",
+      "review_status": "confirmed",
+      "schema_version": 2,
+      "feedback_id": "1befa543fd2449cf9439ea870dc0aabc",
+      "correction_id": "1befa543fd2449cf9439ea870dc0aabc",
+      "created_at": "2026-10-16T07:08:21.754297+00:00",
+      "timestamp": "2026-10-16T07:08:21.754297+00:00",
+      "original_predicted_class": "couch",
+      "original_confidence": 0.8634880185127258,
+      "image_dimensions": null,
+      "frame_reference": {
+        "session_id": "upload-video-c3919ca7d2b8",
+        "frame_id": "upload-video-c3919ca7d2b8:frame-91",
+        "frame_number": 91,
+        "review_frame_token": "36b5b3a4cde14deb8f69fb0107c70f76",
+        "source": "upload_video",
+        "detection_id": "upload-video-c3919ca7d2b8:track:1"
+      },
+      "applied_to_future_inference": false,
+      "applied_at": null,
+      "image_reference": null,
+      "visual_fingerprint": null
+    }
+  ]
+}

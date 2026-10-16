@@ -30,7 +30,7 @@ def make_object(
     return item
 
 
-def test_describes_multiple_objects_and_supported_relationships() -> None:
+def test_scene_narration_uses_object_positions_and_depth_not_pairwise_relations() -> None:
     spatial = {
         "objects": [
             make_object("track:1", "chair", (0, 0, 20, 20), depth=0.8),
@@ -54,10 +54,11 @@ def test_describes_multiple_objects_and_supported_relationships() -> None:
     result = describe_scene(spatial)
 
     assert result["visible_object_count"] == 2
-    assert "A chair is to the left of a table." in result["description"]
-    assert "A chair is above a table." in result["description"]
-    assert "A chair is in front of a table." in result["description"]
-    assert "A chair overlaps a table." in result["description"]
+    assert result["description"] == (
+        "A chair is visible and appears near. A table is visible and appears far."
+    )
+    assert "in front of" not in result["description"]
+    assert "meters" not in result["description"].lower()
     assert len(result["described_relationships"]) == 4
     assert result["warnings"] == []
 
@@ -73,6 +74,30 @@ def test_one_object_uses_class_and_supplied_position() -> None:
     assert result["visible_object_count"] == 1
     assert result["description"] == "A bottle is visible in the lower right."
     assert result["described_relationships"] == []
+
+
+def test_scene_memory_preserves_depth_category_for_spoken_summary() -> None:
+    memory = SceneMemory()
+    memory.update(
+        [
+            {
+                "track_id": 5,
+                "class_name": "bottle",
+                "bounding_box": (80, 80, 100, 100),
+                "horizontal_position": "right",
+                "relative_depth_value": 0.5,
+                "depth_category": "MID-RANGE",
+            }
+        ],
+        frame_number=1,
+    )
+
+    result = describe_scene(scene_memory=memory)
+
+    assert memory.get_visible_objects()[0]["depth_category"] == "MID-RANGE"
+    assert result["description"] == (
+        "A bottle is visible on the right and appears at mid-range."
+    )
 
 
 def test_empty_scene_has_stable_empty_description_and_structured_fields() -> None:
@@ -240,7 +265,7 @@ def test_duplicate_reciprocal_relationships_are_described_once() -> None:
 
     result = describe_scene(spatial)
 
-    assert result["description"] == "A person is to the left of a chair."
+    assert result["description"] == "A chair is visible. A person is visible."
     assert len(result["described_relationships"]) == 1
     assert len([warning for warning in result["warnings"] if "duplicate" in warning]) == 1
 
@@ -305,7 +330,9 @@ def test_scene_graph_input_uses_supplied_edges_and_nodes() -> None:
     result = describe_scene(scene_graph=graph)
 
     assert result["visible_object_count"] == 2
-    assert result["description"] == "A bottle is in front of a chair."
+    assert result["description"] == (
+        "A bottle is visible and appears near. A chair is visible and appears far."
+    )
     assert result["described_relationships"][0]["depth_difference"] == 0.6
 
 

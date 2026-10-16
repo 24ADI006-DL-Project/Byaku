@@ -47,7 +47,7 @@ def _as_numpy(value: Any) -> np.ndarray:
 def _normalise_frame_id(value: Any) -> str:
     if isinstance(value, bool):
         raise ValueError("frame_id must be a non-empty string or non-negative integer")
-    if isinstance(value, Integral) and value >= 0:
+    if isinstance(value, Integral) and int(value) >= 0:
         return str(int(value))
     if isinstance(value, str) and value.strip():
         return value.strip()
@@ -55,7 +55,7 @@ def _normalise_frame_id(value: Any) -> str:
 
 
 def _normalise_frame_number(value: Any) -> int:
-    if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
+    if isinstance(value, bool) or not isinstance(value, Integral) or int(value) < 1:
         raise ValueError("frame_number must be a positive integer (1-based)")
     return int(value)
 
@@ -69,6 +69,7 @@ class DetectionTrackingAdapter:
         *,
         confidence_threshold: float = 0.25,
         iou_threshold: float = 0.45,
+        imgsz: int = 640,
         tracker_config: str = "bytetrack.yaml",
         model: Any = None,
         model_factory: Callable[[str], Any] | None = None,
@@ -80,9 +81,12 @@ class DetectionTrackingAdapter:
         if not isinstance(tracker_config, str) or not tracker_config.strip():
             raise ValueError("tracker_config must be a non-empty string")
 
+        if not isinstance(imgsz, int) or imgsz < 32:
+            raise ValueError("imgsz must be an integer >= 32")
         self.weights_path = Path(weights_path).expanduser().resolve()
         self.confidence_threshold = float(confidence_threshold)
         self.iou_threshold = float(iou_threshold)
+        self.imgsz = imgsz
         self.tracker_config = tracker_config
         self._last_frame_number: int | None = None
         self._seen_frame_ids: set[str] = set()
@@ -96,8 +100,14 @@ class DetectionTrackingAdapter:
         if model_factory is None:
             try:
                 _configure_ultralytics_settings()
-                from ultralytics import settings
-                from ultralytics import YOLO
+                import ultralytics
+                settings = getattr(ultralytics, "settings", None)
+                YOLO = getattr(ultralytics, "YOLO", None)
+                if settings is None or YOLO is None:
+                    from ultralytics.utils import SETTINGS as settings  # type: ignore[no-redef]
+                    from ultralytics.models.yolo import YOLO  # type: ignore[no-redef]
+                if settings is None or YOLO is None or not callable(YOLO):
+                    raise RuntimeError("Ultralytics YOLO is unavailable")
             except Exception as error:
                 raise RuntimeError(
                     f"Ultralytics YOLO is unavailable: {type(error).__name__}: {error}"
@@ -116,6 +126,8 @@ class DetectionTrackingAdapter:
             model_factory = YOLO
 
         try:
+            if not callable(model_factory):
+                raise RuntimeError("YOLO model factory is not callable")
             self.model = model_factory(str(self.weights_path))
         except Exception as error:
             raise RuntimeError(
@@ -179,6 +191,7 @@ class DetectionTrackingAdapter:
                 frame,
                 conf=self.confidence_threshold,
                 iou=self.iou_threshold,
+                imgsz=self.imgsz,
                 persist=True,
                 tracker=self.tracker_config,
                 verbose=False,

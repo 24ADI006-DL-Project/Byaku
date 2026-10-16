@@ -12,6 +12,7 @@
   const cameraFootnote = document.querySelector('#camera-footnote');
   const previewBadge = document.querySelector('#preview-badge');
   const cameraPanel = document.querySelector('#camera-panel');
+  const greetingFallback = document.querySelector('#assistant-greeting-fallback');
   const startButton = document.querySelector('#start-listening');
   const stopButton = document.querySelector('#stop-assistant');
   const queryForm = document.querySelector('#text-query-form');
@@ -27,6 +28,8 @@
   let hasLastFrame = false;
   let toastTimer = null;
   let state = 'idle';
+  let greetingPending = false;
+  let greetingAttempted = false;
 
   function setState(next, message = '') {
     state = next;
@@ -65,23 +68,49 @@
   const speech = new window.BYAKUSpeechController({
     onState: (speechState, message) => {
       if (speechState === 'started') {
+        if (greetingPending) {
+          greetingFallback.hidden = true;
+          return;
+        }
         if (recognition) {
           try { recognition.stop(); } catch { /* Recognition may already be stopped. */ }
         }
         setState('speaking', message);
       } else if (speechState === 'ended' || speechState === 'cancelled') {
+        if (greetingPending) {
+          greetingPending = false;
+          greetingFallback.hidden = true;
+          setState('idle', 'Your assistant is ready. Start BYAKU when you are ready.');
+          return;
+        }
         if (speechState === 'ended' && questionPending) questionPending = false;
         if (assistantActive && !questionPending) {
           setState(speechState === 'ended' ? 'speech_complete' : 'camera_active');
           window.setTimeout(startListening, 350);
         }
       } else if (speechState === 'error') {
+        if (greetingPending) {
+          greetingPending = false;
+          greetingFallback.hidden = false;
+          setState('idle', 'Your assistant is ready. Tap the greeting button if automatic speech was blocked.');
+          return;
+        }
         questionPending = false;
         setState('speech_error', message);
         showToast(message);
       }
     },
   });
+
+  function retryAssistantGreeting() {
+    greetingPending = true;
+    if (!speech.speak('Your assistant is ready.')) {
+      greetingPending = false;
+      greetingFallback.hidden = false;
+    }
+  }
+
+  greetingFallback.addEventListener('click', retryAssistantGreeting);
   const narration = new window.BYAKULiveNarrationScheduler({
     speak: (text, options) => speech.speak(text, options),
     shouldSpeak: () => assistantActive && !questionPending,
@@ -226,15 +255,24 @@
     transcriptLine.textContent = `Heard: “${normalized}”`;
     const isStart = /^start[.!?\s]*$/i.test(normalized);
     if (isStart) {
-      if (await startCameraSession(false)) startListening();
+      if (!assistantActive) {
+        void startCameraSession(false).then((started) => {
+          if (started) startListening();
+        });
+      } else {
+        setState('camera_active', 'Camera active. Ask your question.');
+        startListening();
+      }
+      return;
+    }
+
+    if (!assistantActive || !frameProcessor) {
+      setState('idle', 'Say “START” to activate the camera before asking a live-scene question.');
+      showToast('Say “START” to begin live scene analysis.');
       return;
     }
 
     questionPending = true;
-    if (!frameProcessor && !(await startCameraSession(false))) {
-      questionPending = false;
-      return;
-    }
     setState('processing', 'Sending your question to the scene reasoning module.');
     if (!frameProcessor?.sendQuery(normalized)) {
       questionPending = false;
@@ -245,6 +283,12 @@
 
   function startListening() {
     if (!Recognition) {
+      setState(
+        assistantActive ? 'camera_active' : 'idle',
+        assistantActive
+          ? 'Live scene analysis is running. Voice recognition is unavailable; type your question below.'
+          : 'Voice recognition is unavailable. Type your question below or try Chrome or Edge.',
+      );
       showToast('Voice recognition is unavailable in this browser. Use Chrome or Edge, or type your question below.');
       return;
     }
@@ -323,13 +367,17 @@
 
   startButton.addEventListener('click', () => {
     if (!assistantActive) {
-      void startCameraSession(false).then((started) => {
-        if (started) startListening();
-      });
+      setState('listening', 'Say “START” to begin live scene analysis.');
+      startListening();
       return;
     }
     if (!questionPending && !['processing', 'speaking'].includes(state)) startListening();
   });
   stopButton.addEventListener('click', stopAssistant);
   window.addEventListener('pagehide', stopAssistant);
+
+  if (!greetingAttempted) {
+    greetingAttempted = true;
+    retryAssistantGreeting();
+  }
 })();

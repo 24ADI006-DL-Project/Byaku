@@ -1,3 +1,18 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv-1\\Scripts\\python.exe"
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv-1/Scripts/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}",
+    "${workspaceFolder}/.venv-1/Lib/site-packages",
+    "${workspaceFolder}/.venv/Lib/site-packages"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}",
+    "${workspaceFolder}/.venv-1/Lib/site-packages",
+    "${workspaceFolder}/.venv/Lib/site-packages"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none",
+    "reportMissingTypeStubs": "none",
+    "reportMissingModuleSource": "none"
+  }
 }

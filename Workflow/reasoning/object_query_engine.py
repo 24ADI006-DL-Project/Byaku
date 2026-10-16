@@ -375,21 +375,15 @@ def _state_answer(class_name: str, item: Mapping[str, Any], status: str) -> tupl
         answer = f"{_class_article(class_name).capitalize()} is temporarily missing"
         if last_seen:
             answer += f"; it was last seen at {last_seen}"
-        if box is not None:
-            answer += f" (recorded box {box} pixels)"
         return answer + ".", evidence
     if status == "stale":
         answer = f"{_class_article(class_name).capitalize()}'s last location is stale and is not reliable"
         if last_seen:
             answer += f"; it was last seen at {last_seen}"
-        if box is not None:
-            answer += f" (last recorded box {box} pixels)"
         return answer + ".", evidence
     answer = f"{_class_article(class_name).capitalize()} is currently visible"
     if last_seen:
         answer += f"; its last observation was at {last_seen}"
-    if box is not None:
-        answer += f" (recorded box {box} pixels)"
     return answer + ".", evidence
 
 

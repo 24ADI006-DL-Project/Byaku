@@ -6,13 +6,16 @@ and keeps the servers running for browser inspection until interrupted.
 from __future__ import annotations
 
 import base64
+from collections.abc import Mapping
 import json
+import math
 import os
 from pathlib import Path
 import signal
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from typing import Any
@@ -48,6 +51,113 @@ def _initial_frame_timeout_seconds() -> int:
 
 def _receive_initial_frame(websocket: Any) -> Any:
     return websocket.recv(timeout=_initial_frame_timeout_seconds())
+
+
+def _evaluate_model_accuracy(
+    model: Any,
+    weights_path: Path,
+    *,
+    dataset_root: Path | None = None,
+) -> dict[str, Any]:
+    from Workflow.training.run_detector_training import (
+        BATCH_SIZE,
+        DEFAULT_OUTPUT_ROOT,
+        IMAGE_SIZE,
+        MAX_DETECTIONS,
+        VALIDATION_CONFIDENCE,
+        VALIDATION_IOU,
+        WORKERS,
+        _write_baseline_test_dataset,
+    )
+
+    dataset_root = Path(dataset_root or DEFAULT_OUTPUT_ROOT).resolve()
+    if not (dataset_root / "data.yaml").is_file():
+        raise FileNotFoundError(f"prepared held-out dataset not found: {dataset_root / 'data.yaml'}")
+    model_names = getattr(model, "names", None)
+    if not isinstance(model_names, Mapping):
+        raise ValueError("loaded YOLO model does not expose class names for test label mapping")
+
+    test_images = sorted(
+        path for path in (dataset_root / "images" / "test").glob("*")
+        if path.is_file() and path.suffix.lower() in {".jpg", ".jpeg", ".png"}
+    )
+    if not test_images:
+        raise ValueError(f"held-out test split is empty: {dataset_root / 'images' / 'test'}")
+
+    with tempfile.TemporaryDirectory(prefix="byaku-model-accuracy-") as temp_dir:
+        baseline_data, class_support = _write_baseline_test_dataset(
+            dataset_root=dataset_root,
+            baseline_dataset_root=Path(temp_dir) / "baseline_test_dataset",
+            baseline_names={int(key): str(value) for key, value in model_names.items()},
+        )
+        result = model.val(
+            data=str(baseline_data),
+            split="test",
+            imgsz=IMAGE_SIZE,
+            batch=BATCH_SIZE,
+            device="cpu",
+            workers=WORKERS,
+            conf=VALIDATION_CONFIDENCE,
+            iou=VALIDATION_IOU,
+            max_det=MAX_DETECTIONS,
+            plots=False,
+            save_json=False,
+            verbose=False,
+            project=temp_dir,
+            name="validation",
+            exist_ok=False,
+        )
+
+    result_metrics = result.results_dict
+    metric_names = {
+        "precision": "metrics/precision(B)",
+        "recall": "metrics/recall(B)",
+        "mAP50": "metrics/mAP50(B)",
+        "mAP50_95": "metrics/mAP50-95(B)",
+    }
+    metrics = {name: float(result_metrics[key]) for name, key in metric_names.items()}
+    if not all(math.isfinite(value) for value in metrics.values()):
+        raise ValueError("YOLO validation returned non-finite accuracy metrics")
+    return {
+        "checkpoint": str(Path(weights_path).resolve()),
+        "dataset": str(dataset_root),
+        "test_images": len(test_images),
+        "test_boxes": sum(class_support.values()),
+        "evaluated_classes": len(class_support),
+        **metrics,
+    }
+
+
+def _print_model_accuracy(
+    model: Any,
+    weights_path: Path,
+    *,
+    dataset_root: Path | None = None,
+) -> None:
+    print(
+        f"[Model Accuracy] Evaluating {weights_path} on the held-out test split...",
+        flush=True,
+    )
+    try:
+        metrics = _evaluate_model_accuracy(model, weights_path, dataset_root=dataset_root)
+    except (FileNotFoundError, OSError, RuntimeError, ValueError, KeyError, TypeError, AttributeError) as error:
+        print(
+            f"[Model Accuracy] UNAVAILABLE: {type(error).__name__}: {error}",
+            file=sys.stderr,
+            flush=True,
+        )
+        return
+    print(
+        "[Model Accuracy] "
+        f"checkpoint={metrics['checkpoint']} | "
+        f"test={metrics['test_images']} images, {metrics['test_boxes']} boxes, "
+        f"{metrics['evaluated_classes']} supported classes | "
+        f"Precision={metrics['precision']:.2%}, "
+        f"Recall={metrics['recall']:.2%}, "
+        f"mAP@0.5={metrics['mAP50']:.2%}, "
+        f"mAP@0.5:0.95={metrics['mAP50_95']:.2%}",
+        flush=True,
+    )
 
 
 def _wait_tcp(port: int, timeout: float = 12.0) -> bool:
@@ -119,6 +229,12 @@ def main() -> None:
         print(f"ERROR: FastAPI failed to start on port {FASTAPI_PORT}")
         sys.exit(1)
     print(f"[FastAPI] Running on http://{FASTAPI_HOST}:{FASTAPI_PORT}")
+
+    from Workflow.vision.object_detector_tracker import DEFAULT_WEIGHTS, DetectionTrackingAdapter
+
+    detection_adapter = DetectionTrackingAdapter(weights_path=DEFAULT_WEIGHTS)
+    api.app.state.detection_adapter = detection_adapter
+    _print_model_accuracy(detection_adapter.model, DEFAULT_WEIGHTS)
 
     # 2. Start the browser frontend using the current repo layout (UI/ relay) or legacy Vite app
     env = os.environ.copy()

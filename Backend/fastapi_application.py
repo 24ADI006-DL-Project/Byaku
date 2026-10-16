@@ -4,7 +4,9 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 import hashlib
 import json
+import logging
 from pathlib import Path
+import tempfile
 from threading import Lock
 import time
 from typing import Any
@@ -12,15 +14,20 @@ from uuid import uuid4
 
 import cv2
 import numpy as np
-from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Request, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from Workflow.reasoning.spatial_relation_engine import (
+    DEPTH_CATEGORY_MID_THRESHOLD,
+    DEPTH_CATEGORY_NEAR_THRESHOLD,
+)
 from Workflow.vision.object_detector_tracker import DEFAULT_WEIGHTS, DetectionTrackingAdapter
 from Workflow.vision.relative_depth_estimator import DepthAnythingV2Adapter, MODEL_NAME
+from Workflow.vision.annotation_renderer import encode_annotated_frame
 from Workflow.scene_pipeline import PipelineOrchestrator
 
 from .browser_message_adapter import (
@@ -36,6 +43,14 @@ _frame_processing_lock = Lock()
 _websocket_sessions_lock = Lock()
 _review_frame_cache_lock = Lock()
 _review_frame_cache: dict[str, tuple[str, float]] = {}
+_UPLOAD_IMAGE_MAX_BYTES = 12 * 1024 * 1024
+_UPLOAD_VIDEO_MAX_BYTES = 100 * 1024 * 1024
+_UPLOAD_IMAGE_MAX_PIXELS = 40_000_000
+_UPLOAD_VIDEO_MAX_FRAMES = 20
+_UPLOAD_VIDEO_FRAME_STRIDE = 30
+_UPLOAD_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
+_UPLOAD_VIDEO_SUFFIXES = {".mp4", ".mov", ".avi", ".mkv", ".webm"}
+_logger = logging.getLogger(__name__)
 _feedback_store = FeedbackStore(Path(__file__).resolve().parents[1] / "Data" / "feedback" / "review_history.json")
 _FEEDBACK_CORRECTION_TYPES = {
     "confirm",
@@ -97,9 +112,11 @@ class CameraStartRequest(BaseModel):
 
 class FeedbackRequest(BaseModel):
     frame_id: str | None = None
-    frame_number: int | None = Field(default=None, gt=0)
+    frame_number: int | None = Field(default=None, ge=0)
     review_frame_token: str | None = None
     session_id: str | None = None
+    source: str | None = Field(default="live", max_length=50)
+    detection_id: str | None = Field(default=None, max_length=120)
     submission_id: str = Field(default_factory=lambda: uuid4().hex, min_length=1, max_length=100)
     image_dimensions: dict[str, int] | None = None
     track_id: int | None = Field(default=None, ge=0)
@@ -354,7 +371,7 @@ async def handle_validation_exception(
     # original ValueError object) when a field_validator raises ValueError.
     # Sanitize each error record to ensure JSON serializability.
     try:
-        raw_errors = exception.errors(include_url=False)
+        raw_errors = getattr(exception, "errors")(include_url=False)
     except TypeError:
         raw_errors = exception.errors()
     safe_errors: list[dict] = []
@@ -422,8 +439,15 @@ def _encode_depth_preview(depth_map: np.ndarray | None) -> str | None:
         )
     else:
         preview_depth = depth_map
-    depth_pixels = np.clip(preview_depth * 255.0, 0, 255).astype(np.uint8)
-    colorized_depth = cv2.applyColorMap(depth_pixels, cv2.COLORMAP_TURBO)
+    depth_values = np.clip(preview_depth, 0.0, 1.0)
+    colorized_depth = np.empty((*depth_values.shape, 3), dtype=np.uint8)
+    colorized_depth[depth_values < DEPTH_CATEGORY_MID_THRESHOLD] = (255, 0, 0)
+    mid_range = (
+        (depth_values >= DEPTH_CATEGORY_MID_THRESHOLD)
+        & (depth_values < DEPTH_CATEGORY_NEAR_THRESHOLD)
+    )
+    colorized_depth[mid_range] = (0, 255, 255)
+    colorized_depth[depth_values >= DEPTH_CATEGORY_NEAR_THRESHOLD] = (0, 0, 255)
     success, encoded = cv2.imencode(
         ".jpg",
         colorized_depth,
@@ -637,8 +661,316 @@ def health() -> dict[str, str]:
 def root() -> dict[str, str]:
     return {
         "service": "BYAKU Rebuild API",
-        "description": "Live frame processing, scene queries, and camera capture API.",
+        "description": "Live frames, scene queries, image and video uploads, and camera capture API.",
     }
+
+
+def _validate_upload_suffix(upload: UploadFile, allowed_suffixes: set[str], media_name: str) -> str:
+    filename = upload.filename
+    suffix = Path(filename).suffix.lower() if isinstance(filename, str) else ""
+    if not suffix:
+        raise HTTPException(status_code=400, detail=f"Choose a {media_name} file with a supported extension.")
+    if suffix not in allowed_suffixes:
+        supported = ", ".join(sorted(allowed_suffixes))
+        raise HTTPException(status_code=415, detail=f"Unsupported {media_name} format. Supported extensions: {supported}.")
+    return suffix
+
+
+def _upload_size_label(maximum_bytes: int) -> str:
+    mebibyte = 1024 * 1024
+    if maximum_bytes >= mebibyte and maximum_bytes % mebibyte == 0:
+        return f"{maximum_bytes // mebibyte} MB"
+    return f"{maximum_bytes / mebibyte:g} MB" if maximum_bytes >= mebibyte else f"{maximum_bytes} bytes"
+
+
+async def _read_bounded_upload(upload: UploadFile, maximum_bytes: int, media_name: str) -> bytes:
+    chunks: list[bytes] = []
+    total_bytes = 0
+    while chunk := await upload.read(1024 * 1024):
+        total_bytes += len(chunk)
+        if total_bytes > maximum_bytes:
+            raise HTTPException(
+                status_code=413,
+                detail=f"The {media_name} exceeds the {_upload_size_label(maximum_bytes)} upload limit.",
+            )
+        chunks.append(chunk)
+    if total_bytes == 0:
+        raise HTTPException(status_code=400, detail=f"The selected {media_name} file is empty.")
+    return b"".join(chunks)
+
+
+def _draw_upload_annotations(frame: np.ndarray, objects: list[dict[str, Any]]) -> str:
+    try:
+        encoded, _ = encode_annotated_frame(frame, objects)
+    except (TypeError, ValueError, cv2.error) as error:
+        raise HTTPException(status_code=500, detail="The annotated image could not be encoded.") from error
+    return encoded
+
+
+def _cache_review_frame(token: str, frame_jpeg_base64: str) -> None:
+    now_monotonic = time.monotonic()
+    with _review_frame_cache_lock:
+        _review_frame_cache[token] = (frame_jpeg_base64, now_monotonic)
+        expired = [
+            cache_token for cache_token, (_, captured_at) in _review_frame_cache.items()
+            if now_monotonic - captured_at > 180.0
+        ]
+        for cache_token in expired:
+            _review_frame_cache.pop(cache_token, None)
+        while len(_review_frame_cache) > 64:
+            _review_frame_cache.pop(next(iter(_review_frame_cache)))
+
+
+def _process_uploaded_image(frame: np.ndarray) -> dict[str, Any]:
+    factory: Any = getattr(app.state, "upload_image_components_factory", None)
+    if callable(factory):
+        components: Any = factory()
+        detection_adapter, depth_adapter, orchestrator = components
+    else:
+        detection_adapter = DetectionTrackingAdapter(weights_path=DEFAULT_WEIGHTS)
+        depth_adapter = DepthAnythingV2Adapter(model_name=MODEL_NAME)
+        orchestrator = PipelineOrchestrator()
+
+    session_id = f"upload-image-{uuid4().hex[:12]}"
+    frame_id = f"{session_id}:1"
+    detection_result = detection_adapter.process_frame(frame, frame_id=frame_id, frame_number=1)
+    if detection_result.get("status") not in {"success", "partial"}:
+        raise HTTPException(status_code=422, detail="BYAKU could not detect objects in this image.")
+
+    warnings: list[str] = []
+    depth_map = None
+    try:
+        depth_result = depth_adapter.estimate_depth(frame)
+        depth_map, warnings = _validated_depth_map(depth_result, frame_shape=frame.shape[:2])
+    except Exception as error:
+        warnings.append("Relative depth is unavailable; depth categories are shown as UNKNOWN.")
+        _logger.warning("Depth inference failed for an uploaded image: %s", error)
+
+    height, width = frame.shape[:2]
+    pipeline_result = orchestrator.process_frame(
+        frame_id=frame_id,
+        frame_number=1,
+        image_dimensions={"width": width, "height": height},
+        detections=detection_result.get("orchestrator_detections", []),
+        depth_map=depth_map,
+    )
+    if pipeline_result.get("status") not in {"success", "partial"}:
+        raise HTTPException(status_code=422, detail="BYAKU could not complete scene analysis for this image.")
+    raw_objects = pipeline_result.get("objects", [])
+    objects: list[dict[str, Any]] = []
+    for idx, item in enumerate(raw_objects):
+        track_id = item.get("track_id")
+        det_id = f"{session_id}:track:{track_id}" if track_id is not None else f"{session_id}:frame-1:det-{idx}"
+        obj = dict(item)
+        obj["detection_id"] = det_id
+        obj["depth_category"] = obj.get("depth_category") or "UNKNOWN"
+        obj["horizontal_position"] = obj.get("horizontal_position") or "UNKNOWN"
+        objects.append(obj)
+
+    scene = pipeline_result.get("scene_description")
+    scene = scene if isinstance(scene, Mapping) else {}
+    annotated_img = _draw_upload_annotations(frame, objects)
+
+    review_frame_token = uuid4().hex
+    raw_success, raw_encoded = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 88])
+    if raw_success:
+        _cache_review_frame(review_frame_token, base64.b64encode(raw_encoded.tobytes()).decode("ascii"))
+
+    return {
+        "type": "upload_result",
+        "media_type": "image",
+        "status": "partial" if warnings else pipeline_result.get("status", "success"),
+        "session_id": session_id,
+        "review_frame_token": review_frame_token,
+        "annotated_image": annotated_img,
+        "frame_size": {"width": width, "height": height},
+        "objects": objects,
+        "detection_count": len(objects),
+        "scene_description": scene.get("description", ""),
+        "warnings": warnings,
+        "frames_processed": 1,
+        "frames_failed": 0,
+    }
+
+
+async def _store_video_upload(upload: UploadFile, suffix: str, temporary_directory: Path) -> Path:
+    upload_path = temporary_directory / f"video{suffix}"
+    with upload_path.open("wb") as output:
+        total_bytes = 0
+        while chunk := await upload.read(1024 * 1024):
+            total_bytes += len(chunk)
+            if total_bytes > _UPLOAD_VIDEO_MAX_BYTES:
+                raise HTTPException(
+                    status_code=413,
+                    detail=f"The video exceeds the {_upload_size_label(_UPLOAD_VIDEO_MAX_BYTES)} upload limit.",
+                )
+            output.write(chunk)
+    if total_bytes == 0:
+        raise HTTPException(status_code=400, detail="The selected video file is empty.")
+    return upload_path
+
+
+def _process_uploaded_video(video_path: Path) -> dict[str, Any]:
+    factory: Any = getattr(app.state, "upload_video_pipeline_factory", None)
+    if callable(factory):
+        pipeline: Any = factory()
+    else:
+        from Workflow.tools.process_video_pipeline import OfflineVideoPipeline
+
+        pipeline = OfflineVideoPipeline()
+    result = pipeline.process_video(
+        video_path,
+        max_frames=_UPLOAD_VIDEO_MAX_FRAMES,
+        frame_stride=_UPLOAD_VIDEO_FRAME_STRIDE,
+    )
+    if result.get("final_status") == "error" or not result.get("frames_processed"):
+        processing_warnings = [str(warning).lower() for warning in result.get("warnings", [])]
+        if any("initialization failed" in warning or "adapter is unavailable" in warning for warning in processing_warnings):
+            raise HTTPException(
+                status_code=503,
+                detail="BYAKU's local video analysis models could not be initialized.",
+            )
+        if any("could not open video" in warning or "yielded no frames" in warning for warning in processing_warnings):
+            raise HTTPException(
+                status_code=422,
+                detail="This video could not be decoded. Try a supported codec in MP4, MOV, AVI, MKV, or WebM.",
+            )
+        raise HTTPException(
+            status_code=422,
+            detail="BYAKU could not complete video analysis. Check the video file and try again.",
+        )
+
+    session_id = f"upload-video-{uuid4().hex[:12]}"
+    samples: list[dict[str, Any]] = []
+    unique_objects: dict[tuple[str, str], dict[str, Any]] = {}
+    distinct_descriptions: list[str] = []
+    for frame_result in result.get("per_frame_results", []):
+        frame = frame_result.get("frame", {})
+        frame_number = frame.get("frame_number")
+        timestamp_seconds = frame.get("timestamp_seconds")
+        frame_status = frame_result.get("status", "success")
+        raw_objects = frame_result.get("objects", [])
+        scene = frame_result.get("scene_description", {})
+        description = scene.get("description") if isinstance(scene, Mapping) else ""
+        if isinstance(description, str) and description.strip() and description not in distinct_descriptions:
+            distinct_descriptions.append(description.strip())
+        sample_objects: list[dict[str, Any]] = []
+        for idx, item in enumerate(raw_objects):
+            track_id = item.get("track_id")
+            det_id = f"{session_id}:track:{track_id}" if track_id is not None else f"{session_id}:frame-{frame_number}:det-{idx}"
+            object_record = {
+                "class_name": item.get("class_name") or item.get("model_class_name") or "object",
+                "track_id": track_id,
+                "detection_id": det_id,
+                "confidence": item.get("confidence"),
+                "horizontal_position": item.get("horizontal_position") or "UNKNOWN",
+                "depth_category": item.get("depth_category") or "UNKNOWN",
+                "bounding_box": item.get("bounding_box"),
+            }
+            sample_objects.append(object_record)
+            identity = (
+                object_record["class_name"],
+                str(object_record["track_id"]) if object_record["track_id"] is not None else
+                f"{object_record['horizontal_position']}:{object_record['depth_category']}",
+            )
+            unique_objects[identity] = object_record
+
+        review_token = uuid4().hex
+        raw_frame = frame_result.get("review_frame_image")
+        if raw_frame:
+            _cache_review_frame(review_token, raw_frame)
+
+        samples.append({
+            "frame_number": frame_number,
+            "timestamp_seconds": timestamp_seconds,
+            "status": frame_status,
+            "session_id": session_id,
+            "review_frame_token": review_token,
+            "annotated_image": frame_result.get("annotated_image"),
+            "annotated_size": frame_result.get("annotated_size"),
+            "objects": sample_objects,
+            "detection_count": len(sample_objects),
+            "scene_description": description if isinstance(description, str) else "",
+            "warnings": list(frame_result.get("warnings", [])),
+        })
+
+    scenes = distinct_descriptions[:3]
+    if len(distinct_descriptions) > 3:
+        scenes.append(distinct_descriptions[-1])
+    if scenes:
+        summary = f"Across {result['frames_processed']} sampled video frames, " + " Later, ".join(scenes)
+    else:
+        names = sorted({item["class_name"] for item in unique_objects.values()})
+        summary = (
+            f"Across {result['frames_processed']} sampled video frames, BYAKU observed "
+            + (", ".join(names) if names else "no recognizable objects")
+            + "."
+        )
+
+    total_detections = sum(s.get("detection_count", 0) for s in samples)
+    video_warnings = list(result.get("warnings", []))
+    if result.get("final_status") == "partial" and not video_warnings:
+        video_warnings.append("Some sampled frames or depth estimates were unavailable.")
+
+    return {
+        "type": "upload_result",
+        "media_type": "video",
+        "status": result.get("final_status", "success"),
+        "session_id": session_id,
+        "frames_read": result.get("frames_read", 0),
+        "frames_processed": result.get("frames_processed", 0),
+        "frames_skipped": result.get("frames_skipped", 0),
+        "frames_failed": result.get("frames_failed", 0),
+        "frame_stride": _UPLOAD_VIDEO_FRAME_STRIDE,
+        "samples": samples,
+        "objects": list(unique_objects.values()),
+        "detection_count": total_detections,
+        "scene_description": summary,
+        "warnings": video_warnings,
+    }
+
+
+@app.post("/api/upload/image")
+async def process_uploaded_image(upload: UploadFile) -> dict[str, Any]:
+    suffix = _validate_upload_suffix(upload, _UPLOAD_IMAGE_SUFFIXES, "image")
+    try:
+        content = await _read_bounded_upload(upload, _UPLOAD_IMAGE_MAX_BYTES, "image")
+    finally:
+        await upload.close()
+    if suffix == ".png":
+        valid_signature = content.startswith(b"\x89PNG\r\n\x1a\n")
+    else:
+        valid_signature = content.startswith(b"\xff\xd8\xff")
+    if not valid_signature:
+        raise HTTPException(status_code=415, detail="The image content does not match its file extension.")
+    frame = cv2.imdecode(np.frombuffer(content, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if frame is None:
+        raise HTTPException(status_code=415, detail="The uploaded image is invalid or cannot be decoded.")
+    if frame.shape[0] * frame.shape[1] > _UPLOAD_IMAGE_MAX_PIXELS:
+        raise HTTPException(status_code=413, detail="The image dimensions exceed BYAKU's safe processing limit.")
+    try:
+        return await run_in_threadpool(_process_uploaded_image, frame)
+    except HTTPException:
+        raise
+    except Exception as error:
+        _logger.exception("Uploaded image processing failed")
+        raise HTTPException(status_code=503, detail="BYAKU could not process this image right now. Please try again.") from error
+
+
+@app.post("/api/upload/video")
+async def process_uploaded_video(upload: UploadFile) -> dict[str, Any]:
+    suffix = _validate_upload_suffix(upload, _UPLOAD_VIDEO_SUFFIXES, "video")
+    try:
+        with tempfile.TemporaryDirectory(prefix="byaku-upload-") as temporary_directory:
+            video_path = await _store_video_upload(upload, suffix, Path(temporary_directory))
+            return await run_in_threadpool(_process_uploaded_video, video_path)
+    except HTTPException:
+        raise
+    except Exception as error:
+        _logger.exception("Uploaded video processing failed")
+        raise HTTPException(status_code=503, detail="BYAKU could not process this video right now. Please try again.") from error
+    finally:
+        await upload.close()
 
 
 def _process_live_frame_unlocked(request: FrameRequest) -> dict[str, Any]:
@@ -881,12 +1213,18 @@ def save_feedback(request: FeedbackRequest) -> dict[str, Any]:
     record["human_corrected_name"] = corrected_name
     original = record["original_prediction"]
     feedback_id = uuid4().hex
+    source_val = request.source or "live"
     record.update({
         "schema_version": FeedbackStore.SCHEMA_VERSION,
         "feedback_id": feedback_id,
         "correction_id": feedback_id,
         "created_at": now,
         "timestamp": now,
+        "source": source_val,
+        "session_id": request.session_id,
+        "frame_number": request.frame_number,
+        "track_id": request.track_id,
+        "detection_id": request.detection_id,
         "original_predicted_class": original["class_name"],
         "original_confidence": original.get("confidence"),
         "image_dimensions": record.pop("image_dimensions", None),
@@ -895,6 +1233,8 @@ def save_feedback(request: FeedbackRequest) -> dict[str, Any]:
             "frame_id": request.frame_id,
             "frame_number": request.frame_number,
             "review_frame_token": request.review_frame_token,
+            "source": source_val,
+            "detection_id": request.detection_id,
         },
         "human_corrected_name": corrected_name,
         "applied_to_future_inference": False,

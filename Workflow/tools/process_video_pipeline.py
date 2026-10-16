@@ -1,4 +1,5 @@
 from pathlib import Path
+import base64
 import math
 import statistics
 import time
@@ -10,6 +11,7 @@ import numpy as np
 from ..scene_pipeline import PipelineOrchestrator
 from ..vision.relative_depth_estimator import MODEL_NAME, DepthAnythingV2Adapter
 from ..vision.object_detector_tracker import DEFAULT_WEIGHTS, DetectionTrackingAdapter
+from ..vision.annotation_renderer import encode_annotated_frame
 
 
 class OfflineVideoPipeline:
@@ -188,8 +190,9 @@ class OfflineVideoPipeline:
         orchestrator_times: list[float] = []
         capture = None
         video_metadata: dict[str, Any] = {"path": str(path), "readable": False}
-        should_stop = False
         processing_completed_at: float | None = None
+        source_frame_number = 0
+        consecutive_decode_failures = 0
 
         try:
             try:
@@ -240,23 +243,79 @@ class OfflineVideoPipeline:
                     break
                 try:
                     read_ok, frame = capture.read()
-                except Exception as error:
-                    frames_failed += 1
-                    warnings.append(f"video read failed: {type(error).__name__}: {error}")
-                    break
+                except Exception:
+                    read_ok, frame = False, None
                 if not read_ok or frame is None:
-                    break
+                    consecutive_decode_failures += 1
+                    if consecutive_decode_failures > 10:
+                        self._unique_warnings(warnings, ["Too many consecutive decode failures; stopping early."])
+                        break
+                    failed_frame_number = source_frame_number + 1
+                    if reported_frame_count is not None and failed_frame_number >= reported_frame_count:
+                        break
+                    probe_succeeded = False
+                    probed_frame = None
+                    try:
+                        seek_ok = capture.set(cv2.CAP_PROP_POS_FRAMES, failed_frame_number)
+                        if seek_ok:
+                            probe_ok, probed_frame = capture.read()
+                            if probe_ok and probed_frame is not None:
+                                probe_succeeded = True
+                    except Exception:
+                        probe_succeeded = False
 
-                frames_read += 1
-                source_frame_number = frames_read
-                if (source_frame_number - 1) % frame_stride != 0:
-                    frames_skipped += 1
-                    continue
-                selected_frames += 1
+                    if not probe_succeeded:
+                        break
+
+                    frames_failed += 1
+                    is_failed_frame_sampled = (failed_frame_number - 1) % frame_stride == 0
+                    if is_failed_frame_sampled:
+                        per_frame_results.append({
+                            "frame": {
+                                "frame_id": f"{path.stem}:{failed_frame_number}",
+                                "frame_number": failed_frame_number,
+                                "timestamp_seconds": None,
+                                "image_shape": (height, width) if height and width else None,
+                            },
+                            "status": "decode_error",
+                            "detection_count": 0,
+                            "track_count": 0,
+                            "untracked_detection_count": 0,
+                            "depth_status": "not_run",
+                            "detections": [],
+                            "tracks": [],
+                            "objects": [],
+                            "annotated_image": None,
+                            "annotated_size": None,
+                            "review_frame_image": None,
+                            "warnings": [f"Source frame {failed_frame_number} failed to decode."],
+                        })
+                        selected_frames += 1
+                    self._unique_warnings(warnings, [f"Source frame {failed_frame_number} failed to decode."])
+
+                    # The probed frame is the one *after* the failed frame.
+                    probed_frame_number = failed_frame_number + 1
+                    source_frame_number = probed_frame_number
+                    frames_read += 1
+                    if (probed_frame_number - 1) % frame_stride != 0:
+                        frames_skipped += 1
+                        continue
+                    selected_frames += 1
+                    frame = probed_frame
+                else:
+                    consecutive_decode_failures = 0
+                    frames_read += 1
+                    source_frame_number += 1
+                    if (source_frame_number - 1) % frame_stride != 0:
+                        frames_skipped += 1
+                        continue
+                    selected_frames += 1
 
                 timestamp_seconds = self._time_seconds(capture, cv2.CAP_PROP_POS_MSEC)
                 if timestamp_seconds is None:
                     warnings.append(f"timestamp unavailable for source frame {source_frame_number}")
+                if frame is None:
+                    continue
                 frame_id = f"{path.stem}:{source_frame_number}"
                 frame_height, frame_width = frame.shape[:2]
                 frame_started_at = time.perf_counter()
@@ -298,8 +357,7 @@ class OfflineVideoPipeline:
                             },
                         }
                     )
-                    should_stop = True
-                    break
+                    continue
 
                 depth_started_at = time.perf_counter()
                 try:
@@ -325,8 +383,23 @@ class OfflineVideoPipeline:
                 ):
                     frames_failed += 1
                     warnings.append(f"detection adapter returned mismatched metadata for source frame {source_frame_number}")
-                    should_stop = True
-                    break
+                    per_frame_results.append({
+                        "frame": {
+                            "frame_id": frame_id,
+                            "frame_number": source_frame_number,
+                            "timestamp_seconds": timestamp_seconds,
+                            "image_shape": (frame_height, frame_width),
+                        },
+                        "status": "detection_metadata_error",
+                        "detection_count": 0,
+                        "track_count": 0,
+                        "depth_status": "not_run",
+                        "detections": [],
+                        "tracks": [],
+                        "objects": [],
+                        "warnings": [f"Detection metadata did not match source frame {source_frame_number}."],
+                    })
+                    continue
 
                 if depth_result.get("depth_available"):
                     depth_map = depth_result.get("depth_map")
@@ -361,13 +434,35 @@ class OfflineVideoPipeline:
 
                 if pipeline_result.get("status") not in {"success", "partial"}:
                     frames_failed += 1
-                    should_stop = True
+                    pipeline_status = pipeline_result.get("status", "error")
                 else:
                     frames_processed += 1
+                    pipeline_status = pipeline_result.get("status", "success")
                 frame_elapsed_ms = (time.perf_counter() - frame_started_at) * 1000
                 graph = pipeline_result.get("graph", {})
                 memory = pipeline_result.get("memory", {})
                 scene = pipeline_result.get("scene_description", {})
+                frame_objects = pipeline_result.get("objects", [])
+                annotated_frame = None
+                annotated_size = None
+                raw_frame = None
+                if pipeline_status in {"success", "partial"}:
+                    try:
+                        annotated_frame, annotated_size = encode_annotated_frame(frame, frame_objects)
+                        raw_success, raw_encoded = cv2.imencode(
+                            ".jpg",
+                            frame,
+                            [cv2.IMWRITE_JPEG_QUALITY, 88],
+                        )
+                        if raw_success:
+                            raw_frame = base64.b64encode(raw_encoded.tobytes()).decode("ascii")
+                        else:
+                            raise ValueError("review source frame could not be encoded")
+                    except (TypeError, ValueError, cv2.error) as error:
+                        frames_failed += 1
+                        frames_processed = max(0, frames_processed - 1)
+                        pipeline_status = "annotation_error"
+                        self._unique_warnings(warnings, [f"Source frame {source_frame_number} could not be annotated."])
                 per_frame_results.append(
                     {
                         "frame": {
@@ -376,7 +471,7 @@ class OfflineVideoPipeline:
                             "timestamp_seconds": timestamp_seconds,
                             "image_shape": (frame_height, frame_width),
                         },
-                        "status": pipeline_result.get("status", "error"),
+                        "status": pipeline_status,
                         "detection_count": len(detection_result.get("detections", [])),
                         "track_count": len(detection_result.get("tracks", [])),
                         "untracked_detection_count": detection_result.get("untracked_detection_count", 0),
@@ -387,7 +482,7 @@ class OfflineVideoPipeline:
                             "depth_available": depth_map is not None,
                             "metadata": depth_result.get("metadata", {}),
                         },
-                        "objects": pipeline_result.get("objects", []),
+                        "objects": frame_objects if pipeline_status in {"success", "partial"} else [],
                         "relationships": pipeline_result.get("relationships", []),
                         "graph": graph,
                         "memory": {
@@ -396,6 +491,13 @@ class OfflineVideoPipeline:
                             "stale_ids": [item.get("object_id") for item in memory.get("stale_objects", [])],
                         },
                         "scene_description": scene,
+                        "annotated_image": annotated_frame,
+                        "annotated_size": (
+                            {"width": annotated_size[0], "height": annotated_size[1]}
+                            if annotated_size is not None
+                            else None
+                        ),
+                        "review_frame_image": raw_frame if pipeline_status in {"success", "partial"} else None,
                         "stage_timings_ms": {
                             "detection_tracking": detection_elapsed_ms,
                             "depth_estimation": depth_elapsed_ms,
@@ -404,8 +506,6 @@ class OfflineVideoPipeline:
                         },
                     }
                 )
-                if should_stop:
-                    break
         finally:
             if capture is not None:
                 try:

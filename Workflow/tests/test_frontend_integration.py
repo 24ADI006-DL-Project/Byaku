@@ -357,19 +357,27 @@ def test_workflow_dashboard_explains_live_data_and_status_boundaries() -> None:
     assistant = (WORKSPACE_ROOT / "UI" / "public" / "assistant.html").read_text(encoding="utf-8")
     assistant_script = (WORKSPACE_ROOT / "UI" / "public" / "js" / "assistant_interface.js").read_text(encoding="utf-8")
 
-    for stage in ("camera", "detection", "tracking", "depth", "spatial", "scene", "reasoning", "narration", "review"):
-        assert f'data-module="{stage}"' in dashboard
     for element_id in (
-        "pipeline-explanations",
-        "scene-graph-svg",
         "narration-text",
-        "system-last-frame",
-        "system-initialization",
-        "system-timing-source",
+        "detection",
+        "human-review",
+        "depth",
+        "live-view",
     ):
         assert f'id="{element_id}"' in dashboard
+
+    for removed_id in (
+        "scene-graph-svg",
+        "scene-graph",
+        "query",
+        "settings",
+        "spatial",
+        "pipeline-explanations",
+        "pipeline-title",
+    ):
+        assert f'id="{removed_id}"' not in dashboard
+
     assert "Run Live Demonstration" in dashboard
-    assert "Server TTS" in dashboard
     assert "playback unconfirmed" in script
     assert "renderGraph(message.graph)" in script
     assert "last_frame_available" in script

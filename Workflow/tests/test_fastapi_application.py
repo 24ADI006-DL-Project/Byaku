@@ -1,5 +1,7 @@
 import base64
 import time
+from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -156,7 +158,16 @@ def test_valid_frame_request_processes_through_existing_pipeline(monkeypatch) ->
     )
     assert depth_preview.shape == (20, 40, 3)
     assert np.unique(depth_preview.reshape(-1, 3), axis=0).shape[0] > 1
+    far_pixel, mid_pixel, near_pixel = (
+        depth_preview[0, 3],
+        depth_preview[10, 0],
+        depth_preview[19, 37],
+    )
+    assert far_pixel[0] > far_pixel[2]
+    assert mid_pixel[0] < 80 and mid_pixel[1] > 180 and mid_pixel[2] > 180
+    assert near_pixel[2] > near_pixel[0]
     assert np.isfinite(body["objects"][0]["relative_depth_value"])
+    assert body["objects"][0]["depth_category"] == "FAR"
     assert app.state.orchestrator.query("Is the bottle currently visible?")["status"] == "visible"
 
 
@@ -663,3 +674,298 @@ def test_status_reports_only_known_state_before_processing(monkeypatch) -> None:
     assert "processing_ms" not in body
     assert "events" not in body
     assert "depth_preview" not in body
+
+
+def test_image_upload_uses_vision_pipeline_and_returns_annotated_results(monkeypatch) -> None:
+    monkeypatch.setattr(
+        app.state,
+        "upload_image_components_factory",
+        lambda: (_fake_detection_adapter(), _fake_depth_adapter(), PipelineOrchestrator()),
+        raising=False,
+    )
+    success, encoded = cv2.imencode(".png", np.zeros((20, 40, 3), dtype=np.uint8))
+    assert success
+
+    response = client.post(
+        "/api/upload/image",
+        files={"upload": ("sample.png", encoded.tobytes(), "image/png")},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["media_type"] == "image"
+    assert body["status"] == "success"
+    assert body["frame_size"] == {"width": 40, "height": 20}
+    assert "bottle" in body["scene_description"]
+    assert body["objects"][0]["track_id"] == 7
+    assert body["objects"][0]["horizontal_position"] == "left"
+    assert body["objects"][0]["depth_category"] == "FAR"
+    annotated = cv2.imdecode(
+        np.frombuffer(base64.b64decode(body["annotated_image"]), dtype=np.uint8),
+        cv2.IMREAD_COLOR,
+    )
+    assert annotated.shape == (20, 40, 3)
+
+
+def test_image_upload_reports_unknown_depth_when_estimation_fails(monkeypatch) -> None:
+    class FailedDepthAdapter:
+        def estimate_depth(self, _frame):
+            raise RuntimeError("depth model unavailable")
+
+    monkeypatch.setattr(
+        app.state,
+        "upload_image_components_factory",
+        lambda: (_fake_detection_adapter(), FailedDepthAdapter(), PipelineOrchestrator()),
+        raising=False,
+    )
+    success, encoded = cv2.imencode(".png", np.zeros((20, 40, 3), dtype=np.uint8))
+    assert success
+
+    response = client.post(
+        "/api/upload/image",
+        files={"upload": ("sample.png", encoded.tobytes(), "image/png")},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "partial"
+    assert body["objects"][0]["depth_category"] == "UNKNOWN"
+    assert any("depth is unavailable" in warning for warning in body["warnings"])
+
+
+@pytest.mark.parametrize(
+    ("filename", "content", "status_code"),
+    [
+        ("sample.gif", b"not an image", 415),
+        ("sample.png", b"", 400),
+        ("sample.jpg", b"not a jpeg", 415),
+    ],
+)
+def test_invalid_image_uploads_are_rejected(filename, content, status_code) -> None:
+    response = client.post(
+        "/api/upload/image",
+        files={"upload": (filename, content, "application/octet-stream")},
+    )
+    assert response.status_code == status_code
+    assert "Traceback" not in response.text
+
+
+def test_oversized_image_upload_is_rejected(monkeypatch) -> None:
+    monkeypatch.setattr(api_module, "_UPLOAD_IMAGE_MAX_BYTES", 16)
+    response = client.post(
+        "/api/upload/image",
+        files={"upload": ("large.png", b"x" * 17, "image/png")},
+    )
+    assert response.status_code == 413
+    assert "16 bytes" in response.json()["message"]
+
+
+def test_video_upload_uses_sampled_video_pipeline_and_cleans_temporary_file(monkeypatch) -> None:
+    captured: dict[str, Any] = {}
+
+    class FakeVideoPipeline:
+        def process_video(self, path, *, max_frames, frame_stride):
+            captured.update({
+                "path": Path(path),
+                "max_frames": max_frames,
+                "frame_stride": frame_stride,
+                "path_exists": Path(path).is_file(),
+            })
+            return {
+                "final_status": "success",
+                "frames_processed": 2,
+                "frames_skipped": 58,
+                "per_frame_results": [{
+                    "frame": {"frame_number": 1, "timestamp_seconds": 0.0},
+                    "objects": [{
+                        "class_name": "person",
+                        "track_id": 8,
+                        "horizontal_position": "LEFT",
+                        "depth_category": "NEAR",
+                    }],
+                    "scene_description": {"description": "A person is on the left and appears near."},
+                }, {
+                    "frame": {"frame_number": 31, "timestamp_seconds": 1.0},
+                    "objects": [{
+                        "class_name": "person",
+                        "track_id": 8,
+                        "horizontal_position": "CENTER",
+                        "depth_category": "MID-RANGE",
+                    }],
+                    "scene_description": {"description": "A person is in the center at mid-range."},
+                }],
+            }
+
+    monkeypatch.setattr(app.state, "upload_video_pipeline_factory", FakeVideoPipeline, raising=False)
+    response = client.post(
+        "/api/upload/video",
+        files={"upload": ("walk.mp4", b"video bytes", "video/mp4")},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["media_type"] == "video"
+    assert body["status"] == "success"
+    assert body["frames_processed"] == 2
+    assert body["frame_stride"] == 30
+    assert len(body["samples"]) == 2
+    assert body["objects"][0]["track_id"] == 8
+    assert "Later" in body["scene_description"]
+    assert captured["path_exists"] is True
+    assert captured["max_frames"] == 20
+    assert captured["frame_stride"] == 30
+    assert not captured["path"].exists()
+
+
+def test_invalid_video_codec_returns_readable_error_and_removes_upload(monkeypatch) -> None:
+    captured_paths: list[Path] = []
+
+    class UnsupportedVideoPipeline:
+        def process_video(self, path, **_kwargs):
+            captured_paths.append(Path(path))
+            return {
+                "final_status": "error",
+                "frames_processed": 0,
+                "warnings": [f"could not open video: {path}"],
+            }
+
+    monkeypatch.setattr(app.state, "upload_video_pipeline_factory", UnsupportedVideoPipeline, raising=False)
+    response = client.post(
+        "/api/upload/video",
+        files={"upload": ("broken.webm", b"not a video", "video/webm")},
+    )
+
+    assert response.status_code == 422
+    assert "supported codec" in response.json()["message"]
+    assert str(captured_paths[0]) not in response.text
+    assert not captured_paths[0].exists()
+
+
+def test_empty_and_unsupported_video_uploads_are_rejected() -> None:
+    empty = client.post(
+        "/api/upload/video",
+        files={"upload": ("empty.mp4", b"", "video/mp4")},
+    )
+    unsupported = client.post(
+        "/api/upload/video",
+        files={"upload": ("movie.m4v", b"video", "video/mp4")},
+    )
+    assert empty.status_code == 400
+    assert "empty" in empty.json()["message"]
+    assert unsupported.status_code == 415
+
+
+def test_oversized_video_upload_is_rejected(monkeypatch) -> None:
+    monkeypatch.setattr(api_module, "_UPLOAD_VIDEO_MAX_BYTES", 16)
+    response = client.post(
+        "/api/upload/video",
+        files={"upload": ("large.mp4", b"x" * 17, "video/mp4")},
+    )
+    assert response.status_code == 413
+    assert "16 bytes" in response.json()["message"]
+
+
+def test_video_upload_provides_review_tokens_and_isolated_detection_ids(monkeypatch) -> None:
+    class MockVideoPipeline:
+        def process_video(self, path, *, max_frames, frame_stride):
+            return {
+                "final_status": "success",
+                "frames_processed": 2,
+                "frames_skipped": 0,
+                "frames_failed": 0,
+                "per_frame_results": [
+                    {
+                        "frame": {"frame_number": 1, "timestamp_seconds": 0.0},
+                        "annotated_image": "YW5ub3RhdGVkMQ==",
+                        "annotated_size": (640, 480),
+                        "review_frame_image": "cmF3MQ==",
+                        "objects": [
+                            {"class_name": "person", "track_id": 5, "horizontal_position": "CENTER", "depth_category": "NEAR", "bounding_box": [10, 20, 100, 200]},
+                            {"class_name": "chair", "track_id": None, "horizontal_position": "LEFT", "depth_category": "UNKNOWN", "bounding_box": [150, 50, 250, 220]},
+                        ],
+                        "scene_description": {"description": "A person near a chair."},
+                    },
+                ],
+            }
+
+    monkeypatch.setattr(app.state, "upload_video_pipeline_factory", MockVideoPipeline, raising=False)
+    response = client.post(
+        "/api/upload/video",
+        files={"upload": ("walk.mp4", b"video-data", "video/mp4")},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    session_id = data["session_id"]
+    sample = data["samples"][0]
+
+    assert sample["review_frame_token"] is not None
+    assert sample["annotated_image"] == "YW5ub3RhdGVkMQ=="
+
+    # Scoped tracked detection ID
+    tracked_det = sample["objects"][0]
+    assert tracked_det["track_id"] == 5
+    assert tracked_det["detection_id"] == f"{session_id}:track:5"
+
+    # Scoped untracked detection ID
+    untracked_det = sample["objects"][1]
+    assert untracked_det["track_id"] is None
+    assert untracked_det["detection_id"] == f"{session_id}:frame-1:det-1"
+
+
+def test_uploaded_video_and_live_feedback_remain_isolated_in_history(monkeypatch, tmp_path) -> None:
+    from Backend.feedback_store import FeedbackStore
+    store_path = tmp_path / "review" / "history.json"
+    monkeypatch.setattr(api_module, "_feedback_store", FeedbackStore(store_path))
+
+    # 1. Submit review for uploaded video detection with track_id=3
+    video_feedback = client.post(
+        "/api/feedback",
+        json={
+            "source": "upload_video",
+            "session_id": "session-video-abc",
+            "frame_number": 1,
+            "detection_id": "session-video-abc:track:3",
+            "track_id": 3,
+            "original_prediction": {"class_name": "cat", "confidence": 0.89, "bounding_box": [5, 5, 50, 50]},
+            "correction_type": "confirm",
+            "review_status": "confirmed",
+        },
+    )
+    assert video_feedback.status_code == 201
+    v_body = video_feedback.json()
+    assert v_body["source"] == "upload_video"
+    assert v_body["session_id"] == "session-video-abc"
+    assert v_body["detection_id"] == "session-video-abc:track:3"
+
+    # 2. Submit review for live camera detection with same track_id=3
+    live_feedback = client.post(
+        "/api/feedback",
+        json={
+            "source": "live",
+            "session_id": "session-live-xyz",
+            "frame_number": 42,
+            "detection_id": "track:3",
+            "track_id": 3,
+            "original_prediction": {"class_name": "dog", "confidence": 0.77, "bounding_box": [20, 20, 80, 80]},
+            "correction_type": "class_correction",
+            "review_status": "corrected",
+            "human_corrected_name": "puppy",
+        },
+    )
+    assert live_feedback.status_code == 201
+    l_body = live_feedback.json()
+    assert l_body["source"] == "live"
+    assert l_body["session_id"] == "session-live-xyz"
+    assert l_body["human_corrected_name"] == "puppy"
+
+    # 3. Verify history distinguishes the two and they do not collide
+    all_feedback = client.get("/api/feedback").json()["feedback"]
+    assert len(all_feedback) == 2
+
+    v_rec = next(r for r in all_feedback if r["source"] == "upload_video")
+    l_rec = next(r for r in all_feedback if r["source"] == "live")
+
+    assert v_rec["original_prediction"]["class_name"] == "cat"
+    assert v_rec["review_status"] == "confirmed"
+    assert l_rec["original_prediction"]["class_name"] == "dog"
+    assert l_rec["human_corrected_name"] == "puppy"

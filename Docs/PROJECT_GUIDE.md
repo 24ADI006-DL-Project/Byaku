@@ -1,7 +1,7 @@
 # BYAKU Project Guide
 
 **Purpose:** detailed, code-grounded reference for the BYAKU repository  
-**Last reviewed:** 12 October 2026  
+**Last reviewed:** 15 October 2026
 **Repository root:** `Byaku/`
 
 ## 1. Scope and reading this guide
@@ -39,8 +39,11 @@ The current browser frontend supports these paths:
 | `/assistant.html` | Live assistant |
 | `/dashboard.html` | Project workflow and Human Review |
 
-The welcome screen automatically moves on after three seconds; its Continue
-button skips the wait. The home path then opens the assistant directly. The
+The welcome screen automatically moves to `/assistant.html` after three seconds;
+its Continue button skips the wait and cancels the timer. On assistant entry,
+BYAKU asks browser speech synthesis to say “Your assistant is ready.” A
+user-activated greeting button remains available if the browser blocks automatic
+speech. Neither navigation nor the greeting activates camera or microphone. The
 assistant has a prominent microphone control: the user taps it to grant/start
 browser speech recognition and says **“start”** to request the camera. Saying
 **“stop”** turns the camera off when it is live. If browser speech recognition
@@ -56,10 +59,19 @@ assistant page and its spoken response replaces any ongoing routine narration.
 Actual audio playback is controlled by the browser; the backend cannot confirm
 that a person heard it.
 
-The workflow dashboard is explanatory as well as operational. It describes the
-camera-to-narration stages, reports stage/service state and timing when
-available, shows the last processed frame, allows a person to confirm or correct
-a detection, and retains an audit history with undo.
+The workflow dashboard shows the implemented detection, tracking, relative
+depth, position, scene-graph, optional voice-query, narration, and human-review
+stages rather than presenting event generation as an operational stage. Its
+separate upload panel accepts JPG/JPEG/PNG images
+(up to 12 MB and 40 megapixels) and MP4/MOV/AVI/MKV/WebM videos (up to 100 MB,
+provided the local OpenCV build can decode the codec). Images are processed once.
+Videos reuse the offline video pipeline, processing at most 20 frames sampled at
+30-frame intervals while tracking across samples. Temporary video files are
+removed after the request. The upload path does not use or start the webcam.
+Annotated image results, sampled video detections, and the generated description
+remain visible without speech; Speak Description uses browser speech synthesis.
+The existing live view and human-review tools remain separate dashboard
+features.
 
 ## 3. Architecture and request flow
 
@@ -68,6 +80,7 @@ Browser (static UI served by the Node relay on 127.0.0.1:3000)
   ├─ microphone → browser speech recognition → “start” / “stop”
   ├─ camera permission → local video → JPEG frames (WebSocket /ws)
   ├─ text question (HTTP POST /api/query)
+  ├─ image/video upload (HTTP POST /api/upload/image or /api/upload/video)
   └─ browser speech synthesis ← spoken narration returned by the API
                        │
                        ▼
@@ -76,6 +89,10 @@ FastAPI on 127.0.0.1:8765
        → remembered exact-crop correction → scene pipeline
        → spatial relations → scene memory → graph → description
        → serialized frame result / query result
+  image upload → image decode → YOLO + ByteTrack → optional relative depth
+       → scene pipeline → annotated image + scene description
+  video upload → temporary file → sampled OfflineVideoPipeline
+       → tracking across samples → scene descriptions + detection summary
                        │
           ┌────────────┴─────────────┐
           ▼                          ▼
@@ -122,7 +139,7 @@ edit. The documented launcher uses `.venv-1`.
 
 | File | Role |
 | --- | --- |
-| `Backend/run_byaku.py` | Starts FastAPI and the current UI relay; performs a bounded sample-frame startup warm-up; keeps the processes alive until interrupted. |
+| `Backend/run_byaku.py` | Starts FastAPI and the current UI relay; reports the active YOLO checkpoint's precision, recall, and mAP on the held-out test set at startup; performs a bounded sample-frame warm-up; keeps the processes alive until interrupted. |
 | `Backend/fastapi_application.py` | FastAPI routes, input models/validation, inference orchestration, WebSocket protocol, status, feedback endpoints, frame cache, structured errors. |
 | `Backend/browser_message_adapter.py` | Adapts backend frame/query results for browser-facing fields without fabricating unavailable results. |
 | `Backend/live_camera_producer.py` | Optional OpenCV capture producer; JPEG-encodes and submits frames through the existing frame-processing API; releases camera on failures/stops. |
@@ -138,7 +155,11 @@ warm-up can take time on first model load. It seeds a retained example frame;
 it does **not** grant browser camera access or turn on a live browser camera.
 `BYAKU_INITIAL_FRAME_TIMEOUT_SECONDS` configures the bounded initial sample
 frame wait (default 180 seconds; clamped to 1–300; non-integer input is an
-error).
+error). Startup also evaluates the active detection checkpoint on the prepared
+held-out test split and prints precision, recall, mAP@0.5, and mAP@0.5:0.95.
+These detection metrics are reported instead of a generic “accuracy” percentage;
+if the test dataset or evaluation is unavailable, startup prints an explicit
+`[Model Accuracy] UNAVAILABLE` message and continues.
 
 ### Vision and reasoning modules
 
@@ -149,7 +170,7 @@ error).
 | `Workflow/reasoning/spatial_relation_engine.py` | Validates and clips XYXY boxes; derives center and image-region location; computes horizontal/vertical, IoU overlap, and optional depth relations. Untracked objects receive frame-local IDs. |
 | `Workflow/reasoning/scene_relationship_graph.py` | Converts objects and supported relations into a NetworkX `MultiDiGraph`; preserves node/edge evidence and warns about malformed or dangling input. |
 | `Workflow/reasoning/scene_memory.py` | Tracks recent observations and bounded history, distinguishes visible, temporarily missing, stale, and evicted objects, and prevents per-frame temporary IDs from being falsely carried between frames. Defaults: missing after 5 frames; keep 20 history observations; stale retention 300 frames. |
-| `Workflow/reasoning/scene_description.py` | Describes currently visible objects and evidence-backed relations; rejects contradictory/unsupported relationships and excludes missing/stale items from present-tense claims. |
+| `Workflow/reasoning/scene_description.py` | Produces concise per-object position and categorical relative-depth narration; excludes missing/stale objects and does not narrate pairwise spatial relations or metric distances. |
 | `Workflow/reasoning/object_query_engine.py` | Parses supported natural-language object questions and answers only from current spatial/graph/memory evidence. It distinguishes visible, missing, stale, ambiguous, not found, unsupported, and not-ready states. |
 | `Workflow/reasoning/narration_response.py` | Produces concise, structured speech text for a query or scene summary; removes duplicate/internal warning sentences and does not itself synthesize audio. |
 | `Workflow/scene_pipeline.py` | `PipelineOrchestrator`: transactional coordinator for frame validation, spatial reasoning, staged memory, graph, scene description, narration, and later queries. It performs no camera capture or model inference itself. Failed/invalid frames do not replace the most recent valid scene. |
@@ -160,6 +181,16 @@ External `{width, height}` image dimensions are normalized to canonical
 “above”, and “below” describe image position, not a guarantee about a
 three-dimensional world coordinate. Depth-based “in front”/“behind” is relative
 and depends on usable depth output.
+
+The live browser assistant captures a scene immediately after camera startup,
+then schedules a new frame every five seconds. It allows only one encoded or
+in-flight frame at a time; missed intervals are skipped rather than queued.
+Bounding-box labels show class, persistent track ID when available, horizontal
+image position, and relative depth category. The relative depth map uses higher
+values as nearer; preview colors are blue for `FAR`, yellow for `MID-RANGE`, and
+red for `NEAR`. Scene narration uses per-object position and category rather
+than pairwise spatial-relation sentences or metric distances. User questions
+continue through the separate scene-query path while scanning.
 
 ### Dataset, training, and media tools
 

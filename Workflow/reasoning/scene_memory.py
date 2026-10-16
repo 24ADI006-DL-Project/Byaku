@@ -5,6 +5,8 @@ import math
 import time
 from typing import Any
 
+from .spatial_relation_engine import DEPTH_CATEGORIES
+
 
 class SceneMemory:
     """Keep bounded recent observations for tracked objects across frames."""
@@ -220,6 +222,9 @@ class SceneMemory:
                 "center": center,
                 "relative_depth_value": depth_value,
             }
+            depth_category = observation.get("depth_category")
+            if isinstance(depth_category, str) and depth_category in DEPTH_CATEGORIES:
+                observation_record["depth_category"] = depth_category
 
             confidence = observation.get("confidence")
             if confidence is not None:
@@ -262,6 +267,8 @@ class SceneMemory:
                     new_entry["horizontal_position"] = observation_record["horizontal_position"]
                 if "vertical_position" in observation_record:
                     new_entry["vertical_position"] = observation_record["vertical_position"]
+                if "depth_category" in observation_record:
+                    new_entry["depth_category"] = observation_record["depth_category"]
                 self._objects[object_id] = new_entry
 
             entry = self._objects[object_id]
@@ -280,6 +287,10 @@ class SceneMemory:
                 entry["horizontal_position"] = observation_record["horizontal_position"]
             if "vertical_position" in observation_record:
                 entry["vertical_position"] = observation_record["vertical_position"]
+            if "depth_category" in observation_record:
+                entry["depth_category"] = observation_record["depth_category"]
+            else:
+                entry.pop("depth_category", None)
             if confidence is None:
                 entry.pop("confidence", None)
             else:

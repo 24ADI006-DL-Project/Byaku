@@ -2,9 +2,16 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const pendingBlobs = [];
+const intervals = new Map();
+let nextIntervalId = 0;
 global.window = {
-  setInterval: () => 1,
-  clearInterval: () => {},
+  devicePixelRatio: 1,
+  setInterval: (callback, delay) => {
+    const id = ++nextIntervalId;
+    intervals.set(id, { callback, delay });
+    return id;
+  },
+  clearInterval: (id) => intervals.delete(id),
   setTimeout,
   clearTimeout,
 };
@@ -73,6 +80,28 @@ test('frame processor allows one in-flight frame and never queues stale captures
   await processor.capture();
   assert.equal(pendingBlobs.length, 0);
   assert.equal(connection.sent.filter((item) => item.type === 'frame').length, 1);
+  processor.stop();
+});
+
+test('scene scanning starts immediately and schedules non-overlapping captures every five seconds', async () => {
+  const { connection, processor } = makeProcessor();
+  const interval = intervals.get(processor.timer);
+
+  assert.equal(interval.delay, 5000);
+  assert.equal(pendingBlobs.length, 1);
+  interval.callback();
+  assert.equal(pendingBlobs.length, 1);
+
+  await settleCapture();
+  const firstFrame = connection.sent.find((item) => item.type === 'frame');
+  interval.callback();
+  assert.equal(pendingBlobs.length, 0);
+  connection.emit({ type: 'frame_result', frame_id: firstFrame.frame_id });
+
+  interval.callback();
+  assert.equal(pendingBlobs.length, 1);
+  await settleCapture();
+  assert.equal(connection.sent.filter((item) => item.type === 'frame').length, 2);
   processor.stop();
 });
 
@@ -157,4 +186,41 @@ test('stopping during frame encoding prevents a late send', async () => {
   await capture;
 
   assert.equal(connection.sent.filter((item) => item.type === 'frame').length, 0);
+});
+
+test('bounding boxes show persistent ID, direction and categorical depth in matching colors', () => {
+  const labels = [];
+  const strokeColors = [];
+  const context = {
+    setTransform() {},
+    clearRect() {},
+    strokeRect() { strokeColors.push(this.strokeStyle); },
+    measureText: (text) => ({ width: text.length * 7 }),
+    fillRect() {},
+    fillText: (text) => labels.push(text),
+  };
+  const canvas = {
+    width: 0,
+    height: 0,
+    clientWidth: 300,
+    clientHeight: 300,
+    getContext: () => context,
+  };
+
+  window.BYAKUFrameProcessor.drawOverlay(
+    canvas,
+    { width: 100, height: 100 },
+    [
+      { class_name: 'person', track_id: 3, horizontal_position: 'right', depth_category: 'NEAR', bounding_box: [70, 10, 90, 40] },
+      { class_name: 'chair', track_id: 4, horizontal_position: 'center', depth_category: 'MID-RANGE', bounding_box: [40, 10, 60, 40] },
+      { class_name: 'bottle', track_id: 5, horizontal_position: 'left', depth_category: 'FAR', bounding_box: [10, 10, 30, 40] },
+    ],
+  );
+
+  assert.deepEqual(labels, [
+    'person | ID 3 | RIGHT | NEAR',
+    'chair | ID 4 | CENTER | MID-RANGE',
+    'bottle | ID 5 | LEFT | FAR',
+  ]);
+  assert.deepEqual(strokeColors, ['#ef4444', '#facc15', '#3b82f6']);
 });

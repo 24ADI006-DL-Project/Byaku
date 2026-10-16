@@ -5,19 +5,24 @@ from typing import Any
 import networkx as nx
 
 from .scene_relationship_graph import get_objects
-from .spatial_relation_engine import DEFAULT_DEPTH_DIFFERENCE_THRESHOLD, bounding_box_iou
+from .spatial_relation_engine import (
+    DEFAULT_DEPTH_DIFFERENCE_THRESHOLD,
+    DEPTH_CATEGORIES,
+    bounding_box_iou,
+    relative_depth_category,
+)
 
 
-RELATION_PHRASES = {
-    "left_of": "to the left of",
-    "right_of": "to the right of",
-    "above": "above",
-    "below": "below",
-    "nearer_than": "in front of",
-    "farther_than": "behind",
-    "similar_depth": "at a similar relative depth to",
+VALID_RELATION_TYPES = {
+    "left_of",
+    "right_of",
+    "above",
+    "below",
+    "nearer_than",
+    "farther_than",
+    "similar_depth",
+    "overlapping",
 }
-VALID_RELATION_TYPES = {*RELATION_PHRASES, "overlapping"}
 INVERSE_RELATIONS = {
     "left_of": "right_of",
     "right_of": "left_of",
@@ -357,19 +362,16 @@ def _position_phrase(item: Mapping[str, Any]) -> str:
     return ""
 
 
-def _relationship_sentence(
-    relation: Mapping[str, Any],
-    objects_by_id: Mapping[Any, Mapping[str, Any]],
-) -> str:
-    subject = objects_by_id[relation["subject"]]
-    target = objects_by_id[relation["object"]]
-    subject_name = _article(subject["class_name"])
-    target_name = _article(target["class_name"])
-    relation_type = relation["relation"]
-    if relation_type == "overlapping":
-        return f"{subject_name.capitalize()} overlaps {target_name}."
-    phrase = RELATION_PHRASES[relation_type]
-    return f"{subject_name.capitalize()} is {phrase} {target_name}."
+def _depth_phrase(item: Mapping[str, Any]) -> str:
+    category = item.get("depth_category")
+    if not isinstance(category, str) or category not in DEPTH_CATEGORIES:
+        category = relative_depth_category(item.get("relative_depth_value"))
+    return {
+        "NEAR": "near",
+        "MID-RANGE": "at mid-range",
+        "FAR": "far",
+        "UNKNOWN": "",
+    }[category]
 
 
 def describe_scene(
@@ -405,22 +407,24 @@ def describe_scene(
         warnings,
     )
 
-    sentences = [
-        _relationship_sentence(relation, objects_by_id)
-        for relation in described_relationships
-    ]
-    described_object_ids = {
-        object_id
-        for relation in described_relationships
-        for object_id in (relation["subject"], relation["object"])
-    }
-    for item in visible_objects:
-        if item["object_id"] in described_object_ids:
-            continue
+    horizontal_order = {"left": 0, "center": 1, "right": 2}
+    ordered_objects = sorted(
+        visible_objects,
+        key=lambda item: (
+            horizontal_order.get(item.get("horizontal_position"), 3),
+            item["class_name"].casefold(),
+            str(item["object_id"]),
+        ),
+    )
+    sentences = []
+    for item in ordered_objects:
         position = _position_phrase(item)
         sentence = f"{_article(item['class_name']).capitalize()} is visible"
         if position:
             sentence += f" {position}"
+        depth_phrase = _depth_phrase(item)
+        if depth_phrase:
+            sentence += f" and appears {depth_phrase}"
         sentences.append(f"{sentence}.")
 
     description = " ".join(sentences) if sentences else "No objects are currently visible."

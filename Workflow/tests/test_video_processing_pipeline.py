@@ -286,3 +286,111 @@ def test_real_local_video_runs_both_cached_models_through_orchestrator() -> None
     assert result["final_status"] in {"success", "partial"}
     assert result["query_result"] is not None
     assert result["speech_response"] is not None
+
+
+class FakeCaptureWithFailures:
+    """Like FakeCapture but returns read failures on specified 0-indexed positions."""
+
+    def __init__(self, frames, *, fail_indices=frozenset(), opened=True, fps=10.0):
+        self.frames = list(frames)
+        self.fail_indices = set(fail_indices)
+        self.opened = opened
+        self.fps = fps
+        self.index = 0
+        self.released = False
+
+    def isOpened(self):
+        return self.opened
+
+    def get(self, property_id):
+        if property_id == cv2.CAP_PROP_FPS:
+            return self.fps
+        if property_id == cv2.CAP_PROP_FRAME_COUNT:
+            return len(self.frames)
+        if property_id == cv2.CAP_PROP_FRAME_WIDTH:
+            return self.frames[0].shape[1] if self.frames else 24
+        if property_id == cv2.CAP_PROP_FRAME_HEIGHT:
+            return self.frames[0].shape[0] if self.frames else 16
+        if property_id == cv2.CAP_PROP_POS_MSEC:
+            return self.index * 100.0
+        return 0.0
+
+    def read(self):
+        if not self.opened or self.index >= len(self.frames):
+            return False, None
+        if self.index in self.fail_indices:
+            self.index += 1
+            return False, None
+        frame = self.frames[self.index]
+        self.index += 1
+        return True, frame.copy()
+
+    def set(self, property_id, value):
+        if property_id == cv2.CAP_PROP_POS_FRAMES:
+            idx = int(value)
+            if 0 <= idx < len(self.frames):
+                self.index = idx
+                return True
+        return False
+
+    def release(self):
+        self.released = True
+
+
+def test_decode_recovery_skips_corrupted_frame_and_continues(tmp_path: Path) -> None:
+    path = make_video_path(tmp_path)
+    frames = [np.full((16, 24, 3), value, dtype=np.uint8) for value in range(4)]
+    capture = FakeCaptureWithFailures(frames, fail_indices={1})
+    detector = FakeDetectionAdapter()
+    pipeline = make_pipeline(capture, detector=detector)
+
+    result = pipeline.process_video(path)
+
+    assert capture.released is True
+    assert result["frames_failed"] == 1
+    assert result["frames_processed"] >= 2
+    assert result["final_status"] == "partial"
+    processed_frame_numbers = [
+        item["frame"]["frame_number"]
+        for item in result["per_frame_results"]
+        if item["status"] in {"success", "partial"}
+    ]
+    assert 1 in processed_frame_numbers
+    failed_entries = [item for item in result["per_frame_results"] if item["status"] == "decode_error"]
+    assert len(failed_entries) == 1
+    assert failed_entries[0]["frame"]["frame_number"] == 2
+    assert failed_entries[0]["annotated_image"] is None
+    assert any("frame 2 failed to decode" in warning.lower() for warning in result["warnings"])
+
+
+def test_consecutive_decode_failure_limit_stops_early(tmp_path: Path) -> None:
+    path = make_video_path(tmp_path)
+    # Create enough frames so that failures at every other index cause
+    # consecutive_decode_failures to exceed 10 before reaching the end.
+    # Failures at even indices: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22
+    # After each failure, the probe at the next odd index succeeds, so the
+    # recovery path runs, incrementing consecutive_decode_failures each time.
+    frames = [np.full((16, 24, 3), i, dtype=np.uint8) for i in range(30)]
+    fail_at = set(range(0, 24, 2))  # 0, 2, 4, ..., 22
+    capture = FakeCaptureWithFailures(frames, fail_indices=fail_at)
+    detector = FakeDetectionAdapter()
+    pipeline = make_pipeline(capture, detector=detector)
+
+    result = pipeline.process_video(path)
+
+    assert capture.released is True
+    assert any("consecutive" in warning.lower() for warning in result["warnings"])
+
+
+def test_successful_frames_include_annotated_and_review_images(tmp_path: Path) -> None:
+    path = make_video_path(tmp_path)
+    frames = [np.zeros((16, 24, 3), dtype=np.uint8) for _ in range(2)]
+    result = make_pipeline(FakeCapture(frames)).process_video(path)
+
+    assert result["frames_processed"] == 2
+    for item in result["per_frame_results"]:
+        if item["status"] in {"success", "partial"}:
+            assert isinstance(item["annotated_image"], str) and len(item["annotated_image"]) > 0
+            assert isinstance(item["annotated_size"], dict)
+            assert "width" in item["annotated_size"] and "height" in item["annotated_size"]
+            assert isinstance(item["review_frame_image"], str) and len(item["review_frame_image"]) > 0

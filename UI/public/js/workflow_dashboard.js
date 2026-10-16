@@ -198,8 +198,14 @@
         : record.review_status === 'confirmed' || record.review_status === 'accepted'
           ? ' · confirmed correct'
           : '';
+      const source = record.source || record.frame_reference?.source || 'live';
+      const sourceLabel = source === 'upload_video' || source === 'video'
+        ? '[Video Upload]'
+        : source === 'upload_image' || source === 'image'
+          ? '[Image Upload]'
+          : '[Live Camera]';
       const summary = document.createElement('span');
-      summary.textContent = `${time} · ${label}${record.track_id === null ? '' : ` #${record.track_id}`}${corrected} · ${record.review_status}`;
+      summary.textContent = `${sourceLabel} ${time} · ${label}${record.track_id === null || record.track_id === undefined ? '' : ` #${record.track_id}`}${corrected} · ${record.review_status}`;
       item.append(summary);
       if (record.review_status !== 'undone') {
         const undo = document.createElement('button');
@@ -220,6 +226,9 @@
     if (!response.ok) throw new Error(body.detail || `Feedback history returned ${response.status}`);
     reviewHistory = Array.isArray(body.feedback) ? body.feedback : [];
     renderReviewHistory();
+  }
+  if (typeof window !== 'undefined') {
+    window.byakuReloadReviewHistory = loadReviewHistory;
   }
 
   function refreshReviewScene(message) {
@@ -444,7 +453,7 @@
     const object = reasoning?.objects?.[0];
     if (badge) badge.textContent = query ? 'Answered' : 'No query received';
     if (strong) strong.textContent = narration || 'Waiting for a question';
-    if (description) description.textContent = query ? `“${query}”` : 'Query, target position, distance, and spoken answer will appear here.';
+    if (description) description.textContent = query ? `“${query}”` : 'Query, target position, relative depth category, and spoken answer will appear here.';
     setText('.query-result-list div:nth-child(1) dd', object?.class_name || '—');
     setText('.query-result-list div:nth-child(2) dd', object ? formatPosition(object) : '—');
     setText('.query-result-list div:nth-child(3) dd', object ? formatRelativeDepth(object.relative_depth_value) : '—');
@@ -586,7 +595,6 @@
   function renderFrame(message) {
     const objects = Array.isArray(message.objects) ? message.objects : [];
     const detections = Array.isArray(message.detections) ? message.detections : [];
-    const events = Array.isArray(message.events) ? message.events : [];
     const tracks = Array.isArray(message.tracks) ? message.tracks : [];
 
     refreshReviewScene(message);
@@ -614,16 +622,12 @@
     if (count) count.textContent = `${detections.length} detection${detections.length === 1 ? '' : 's'}`;
     replaceRows('#detection-rows', objects, (item) => [
       item.class_name,
-      item.track_id,
+      item.track_id !== null && item.track_id !== undefined ? item.track_id : '—',
       Number.isFinite(Number(item.confidence)) ? `${(Number(item.confidence) * 100).toFixed(1)}%` : '—',
+      formatPosition(item),
+      item.depth_category || 'UNKNOWN',
       Array.isArray(item.bounding_box) ? item.bounding_box.map((value) => Math.round(value)).join(', ') : '—',
     ], 'No detections received');
-    replaceRows(
-      '#spatial-rows',
-      objects,
-      (item) => [item.class_name, formatPosition(item), formatRelativeDepth(item.relative_depth_value)],
-      'No spatial objects received',
-    );
 
     const preview = document.querySelector('#depth-preview');
     const depthStatus = document.querySelector('#depth-status');
@@ -642,19 +646,6 @@
 
     renderGraph(message.graph);
 
-    const eventList = document.querySelector('#event-list');
-    const eventEmpty = document.querySelector('.events-empty');
-    if (eventList) {
-      eventList.replaceChildren();
-      for (const event of events) {
-        const item = document.createElement('li');
-        item.textContent = `${event.event_type.replaceAll('_', ' ')} · ${event.class_name} #${event.track_id} · ${event.priority}`;
-        eventList.append(item);
-      }
-    }
-    if (eventEmpty) eventEmpty.hidden = events.length > 0;
-    const eventBadge = document.querySelector('#events .data-tag');
-    if (eventBadge) eventBadge.textContent = events.length ? `${events.length} updates` : 'No events';
   }
 
   async function refreshStatus() {

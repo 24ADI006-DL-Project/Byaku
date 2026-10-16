@@ -20,6 +20,8 @@ const mimeTypes = {
   '.js': 'text/javascript; charset=utf-8',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
+  '.wav': 'audio/wav',
+  '.json': 'application/json; charset=utf-8',
 };
 
 const server = http.createServer(async (request, response) => {
@@ -33,10 +35,25 @@ const server = http.createServer(async (request, response) => {
     try {
       const chunks = [];
       let size = 0;
+      const maxBodyBytes = pathname === '/api/upload/image'
+        ? 13 * 1024 * 1024
+        : pathname === '/api/upload/video'
+          ? 101 * 1024 * 1024
+          : 1024 * 1024;
+      const contentLength = Number(request.headers['content-length']);
+      if (Number.isFinite(contentLength) && contentLength > maxBodyBytes) {
+        response.writeHead(413, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify({ error: 'Upload request exceeds the allowed size.' }));
+        return;
+      }
       if (request.method !== 'GET') {
         for await (const chunk of request) {
           size += chunk.length;
-          if (size > 1024 * 1024) throw new Error('Request body exceeds 1 MB');
+          if (size > maxBodyBytes) {
+            const error = new Error('Upload request exceeds the allowed size.');
+            error.statusCode = 413;
+            throw error;
+          }
           chunks.push(chunk);
         }
       }
@@ -53,7 +70,7 @@ const server = http.createServer(async (request, response) => {
       });
       response.end(body);
     } catch (error) {
-      response.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      response.writeHead(error.statusCode === 413 ? 413 : 503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       response.end(JSON.stringify({ error: error.message || 'Python AI backend is unavailable' }));
     }
     return;
