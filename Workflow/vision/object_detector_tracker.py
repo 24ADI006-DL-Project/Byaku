@@ -7,6 +7,7 @@ import shutil
 from datetime import UTC, datetime
 from typing import Any, Callable
 
+# pyrefly: ignore [missing-import]
 import numpy as np
 
 
@@ -100,6 +101,7 @@ class DetectionTrackingAdapter:
         if model_factory is None:
             try:
                 _configure_ultralytics_settings()
+                # pyrefly: ignore [missing-import]
                 import ultralytics
                 settings = getattr(ultralytics, "settings", None)
                 YOLO = getattr(ultralytics, "YOLO", None)

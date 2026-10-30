@@ -1,5 +1,7 @@
 # BYAKU
 
+Individual contribution link: https://kumaragurudtsteam-my.sharepoint.com/:p:/g/personal/navithanjali_24ad_kct_ac_in/cQqoNh66HUG4RblS2YfqpM_bEgUCDFJA4fSxXlt6-OdBZ5vQrw
+
 BYAKU is a camera-based scene assistant. The browser UI handles camera access, voice/text interaction, and the developer dashboard. The FastAPI backend runs YOLO11n with ByteTrack and coordinates optional relative-depth and spatial scene reasoning.
 
 ## Start the application

@@ -4,11 +4,13 @@ import base64
 from typing import Any
 
 try:
+    # pyrefly: ignore [missing-import]
     import cv2
 except Exception:  # pragma: no cover
     cv2 = None  # type: ignore
 
 try:
+    # pyrefly: ignore [missing-import]
     import numpy as np
 except Exception:  # pragma: no cover
     np = None  # type: ignore
